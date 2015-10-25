@@ -258,4 +258,7 @@
 	<!-- Is the device capable of hot swapping an UICC Card -->
 	<bool name="config_hotswapCapable">true</bool>
 
+    <!-- Set lowmemorykiller threshold -->
+    <integer name="config_lowMemoryKillerMinFreeKbytesAbsolute">16384</integer>
+
 </resources>

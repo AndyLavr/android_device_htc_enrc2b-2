@@ -25,7 +25,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/sbin/offmode_charging:recovery/root/sbin/offmode_charging \
     $(LOCAL_PATH)/recovery/sbin/power_test:recovery/root/sbin/power_test \
     $(LOCAL_PATH)/recovery/init.recovery.enrc2b.rc:recovery/root/init.recovery.enrc2b.rc
-    
+
 # Files needed for boot image
 PRODUCT_COPY_FILES := \
     $(LOCAL_PATH)/ramdisk/init.enrc2b.rc:root/init.enrc2b.rc \
@@ -45,7 +45,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/p2p_supplicant_overlay.conf:system/etc/wifi/p2p_supplicant_overlay.conf \
     $(LOCAL_PATH)/configs/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     $(LOCAL_PATH)/configs/calibration:system/etc/calibration \
-    $(LOCAL_PATH)/configs/sysctl.conf:system/etc/sysctl.conf
+    $(LOCAL_PATH)/configs/sysctl.conf:system/etc/sysctl.conf \
+		$(LOCAL_PATH)/gps_daemon.sh:system/bin/gps_daemon.sh
 
 # BT
 PRODUCT_COPY_FILES += \
@@ -65,12 +66,16 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     nfc.enrc2b \
     Nfc \
+		libnfc \
     Tag
-    
+
+#help GL work in M
+PRODUCT_PACKAGES += \
+  libdgv1
 
 # Power
 PRODUCT_PACKAGES += \
-    power.tegra 
+    power.tegra
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -93,8 +98,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
 
 # libhwui flags
 PRODUCT_PROPERTY_OVERRIDES += \
-    debug.hwui.render_dirty_regions=false   
-    
+    debug.hwui.render_dirty_regions=false
+
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp

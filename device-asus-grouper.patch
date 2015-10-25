@@ -1,0 +1,947 @@
+From 21ca68c67ac593364fed43a3e3ac1f81d5d9e5e3 Mon Sep 17 00:00:00 2001
+From: Dmitry Grinberg <dmitrygr@gmail.com>
+Date: Tue, 13 Oct 2015 07:22:21 +0000
+Subject: [PATCH] M for grouper
+
+---
+ BoardConfig.mk                                     |   2 +-
+ BoardConfigCommon.mk                               |  22 ---
+ bluetooth/bdroid_buildcfg.h                        |   3 -
+ device-common.mk                                   |  11 +-
+ gps_daemon.sh                                      |   4 +
+ init.grouper.rc                                    |  45 ++---
+ keymaster/keymaster_grouper.cpp                    |  22 +--
+ libdgv1/Android.mk                                 |  26 +++
+ libdgv1/libdgv1.c                                  |  78 +++++++++
+ .../frameworks/base/core/res/res/values/config.xml |   5 +-
+ self-extractors/nvidia/staging/device-partial.mk   |   6 +-
+ .../nvidia/staging/proprietary/Android.mk          |  12 +-
+ sensors-config/Android.mk                          |  26 +++
+ sensors-config/sensors-config.c                    | 192 +++++++++++++++++++++
+ sepolicy/file_contexts                             |  15 +-
+ sepolicy/fsck.te                                   |   3 +
+ sepolicy/gpsd.te                                   |  18 +-
+ sepolicy/init_shell.te                             |  12 +-
+ sepolicy/keystore.te                               |   4 +-
+ sepolicy/mediaserver.te                            |   3 +
+ sepolicy/recovery.te                               |   6 +-
+ sepolicy/setup_fs.te                               |  14 ++
+ sepolicy/system_server.te                          |   7 +-
+ sepolicy/touchfw.te                                |  10 ++
+ touch_fw_update.sh                                 |   3 +
+ 25 files changed, 456 insertions(+), 93 deletions(-)
+ create mode 100755 gps_daemon.sh
+ create mode 100755 libdgv1/Android.mk
+ create mode 100755 libdgv1/libdgv1.c
+ create mode 100755 sensors-config/Android.mk
+ create mode 100755 sensors-config/sensors-config.c
+ create mode 100755 sepolicy/fsck.te
+ create mode 100755 sepolicy/setup_fs.te
+ create mode 100755 sepolicy/touchfw.te
+ create mode 100755 touch_fw_update.sh
+
+diff --git a/BoardConfig.mk b/BoardConfig.mk
+index 48bc59d..b254513 100644
+--- a/BoardConfig.mk
++++ b/BoardConfig.mk
+@@ -40,4 +40,4 @@ include device/asus/grouper/BoardConfigCommon.mk
+ 
+ TARGET_RECOVERY_FSTAB = device/asus/grouper/fstab.grouper
+ 
+-MALLOC_IMPL := dlmalloc
++#BOARD_WIDEVINE_OEMCRYPTO_LEVEL := 1
+diff --git a/BoardConfigCommon.mk b/BoardConfigCommon.mk
+index 76cdf5f..7ed8d54 100644
+--- a/BoardConfigCommon.mk
++++ b/BoardConfigCommon.mk
+@@ -85,25 +85,3 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
+ BOARD_SEPOLICY_DIRS += \
+         device/asus/grouper/sepolicy
+ 
+-BOARD_SEPOLICY_UNION += \
+-        file_contexts \
+-        genfs_contexts \
+-        bluetooth.te \
+-        device.te \
+-        domain.te \
+-        drmserver.te \
+-        init_shell.te \
+-        file.te \
+-        gpsd.te \
+-        keystore.te \
+-        lmkd.te \
+-        mediaserver.te \
+-        recovery.te \
+-        rild.te \
+-        sensors_config.te \
+-        surfaceflinger.te \
+-        system_app.te \
+-        system_server.te \
+-        ueventd.te \
+-        vold.te \
+-        radio.te
+diff --git a/bluetooth/bdroid_buildcfg.h b/bluetooth/bdroid_buildcfg.h
+index 6bb11fb..eb6af92 100644
+--- a/bluetooth/bdroid_buildcfg.h
++++ b/bluetooth/bdroid_buildcfg.h
+@@ -27,7 +27,4 @@
+ #define BTIF_HF_SERVICES (BTA_HSP_SERVICE_MASK)
+ #define BTIF_HF_SERVICE_NAMES  { BTIF_HSAG_SERVICE_NAME, NULL }
+ #define PAN_NAP_DISABLED TRUE
+-#define BLE_INCLUDED FALSE
+-#define BTA_GATT_INCLUDED FALSE
+-#define SMP_INCLUDED FALSE
+ #endif
+diff --git a/device-common.mk b/device-common.mk
+index c19c2c7..ea473df 100644
+--- a/device-common.mk
++++ b/device-common.mk
+@@ -46,7 +46,9 @@ PRODUCT_COPY_FILES += \
+     $(LOCAL_KERNEL):kernel \
+     device/asus/grouper/ueventd.grouper.rc:root/ueventd.grouper.rc \
+     device/asus/grouper/init.grouper.usb.rc:root/init.grouper.usb.rc \
+-    device/asus/grouper/gps.conf:system/etc/gps.conf
++    device/asus/grouper/gps.conf:system/etc/gps.conf \
++    device/asus/grouper/touch_fw_update.sh:system/bin/touch_fw_update.sh \
++    device/asus/grouper/gps_daemon.sh:system/bin/gps_daemon.sh
+ 
+ ifneq ($(TARGET_PREBUILT_WIFI_MODULE),)
+ PRODUCT_COPY_FILES += \
+@@ -73,13 +75,17 @@ PRODUCT_COPY_FILES += \
+     device/asus/grouper/sensor00fn11.idc:system/usr/idc/sensor00fn11.idc \
+     device/asus/grouper/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl
+ 
+-PRODUCT_PACKAGES := \
++PRODUCT_PACKAGES += \
+     libwpa_client \
+     hostapd \
+     dhcpcd.conf \
+     wpa_supplicant \
+     wpa_supplicant.conf
+ 
++#help GL work in M
++PRODUCT_PACKAGES += \
++    libdgv1
++
+ PRODUCT_PACKAGES += \
+     lights.grouper \
+     audio.primary.grouper \
+@@ -99,6 +105,7 @@ PRODUCT_PACKAGES += \
+ # NFC packages
+ PRODUCT_PACKAGES += \
+     nfc.grouper \
++    libnfc\
+     Nfc \
+     Tag
+ 
+diff --git a/gps_daemon.sh b/gps_daemon.sh
+new file mode 100755
+index 0000000..e5f9457
+--- /dev/null
++++ b/gps_daemon.sh
+@@ -0,0 +1,4 @@
++#!/system/bin/sh
++
++#shellscript as this is th eonyl way selinux will allow this to proceed
++/system/bin/glgps -c /system/etc/gps/gpsconfig.xml
+diff --git a/init.grouper.rc b/init.grouper.rc
+index 3fdeda4..ffdeab1 100644
+--- a/init.grouper.rc
++++ b/init.grouper.rc
+@@ -1,22 +1,10 @@
+ import init.grouper.usb.rc
+ 
+ on early-init
+-    mount debugfs debugfs /sys/kernel/debug
+-
+-on init
+-    # See storage config details at http://source.android.com/tech/storage/
+-    mkdir /mnt/shell/emulated 0700 shell shell
+-    mkdir /storage/emulated 0555 root root
+-
+-    export EXTERNAL_STORAGE /storage/emulated/legacy
+-    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+-    export EMULATED_STORAGE_TARGET /storage/emulated
++    # Set init and its forked children's oom_adj.
++    write /proc/1/oom_score_adj -1000
+ 
+-    # Support legacy paths
+-    symlink /storage/emulated/legacy /sdcard
+-    symlink /storage/emulated/legacy /mnt/sdcard
+-    symlink /storage/emulated/legacy /storage/sdcard0
+-    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
++    mount debugfs debugfs /sys/kernel/debug
+ 
+ on early-boot
+     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+@@ -49,7 +37,14 @@ on post-fs-data
+     # gps
+     mkdir /data/gps
+     chown gps system /data/gps
+-    chmod 770 /data/gps
++    chmod 1770 /data/gps
++    write /sys/class/gpio/export 162
++    write /sys/class/gpio/gpio162/value 0
++    write /sys/class/gpio/gpio162/direction out
++    chown gps system /sys/class/gpio/gpio162/value
++    chmod 0644 /sys/class/gpio/gpio162/value
++    chown gps system /dev/ttyHS1
++    chmod 0660 /dev/ttyHS1
+ 
+     # Set indication (checked by vold) that we have finished this action
+     setprop vold.post_fs_data_done 1
+@@ -288,16 +283,6 @@ on boot
+     write /sys/block/mmcblk0/queue/read_ahead_kb 2048
+     write /sys/block/mmcblk1/queue/read_ahead_kb 2048
+ 
+-# GPS init
+-    write /sys/class/gpio/export 162
+-    write /sys/class/gpio/gpio162/value 0
+-    write /sys/class/gpio/gpio162/direction out
+-    chown gps system /sys/class/gpio/gpio162/value
+-    chmod 0664 /sys/class/gpio/gpio162/value
+-    chown gps system /dev/ttyHS1
+-    chmod 0660 /dev/ttyHS1
+-
+-
+ # Load WiFi driver
+ 
+ # BB mapping symbolic name to the logging ttyACM port
+@@ -384,9 +369,6 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
+     oneshot
+ #Sensor load calibration files end
+ 
+-# virtual sdcard daemon running as media_rw (1023)
+-service sdcard /system/bin/sdcard -u 1023 -g 1023 -t 4 -l /data/media /mnt/shell/emulated
+-    class late_start
+ 
+ # bugreport is triggered by the VOLUME-DOWN and VOLUME-UP keys
+ service bugreport /system/bin/dumpstate -d -p -B \
+@@ -397,7 +379,7 @@ service bugreport /system/bin/dumpstate -d -p -B \
+     keycodes 115 114
+ 
+ # Start GPS daemon
+-service gps-daemon /system/bin/glgps -c /system/etc/gps/gpsconfig.xml
++service gps-daemon /system/bin/gps_daemon.sh
+   user gps
+   group system
+   class late_start
+@@ -432,10 +414,11 @@ service setup_fs /system/bin/setup_fs \
+     group root
+     oneshot
+ 
+-service touch_fw_update /system/bin/sh -c "echo /system/etc/firmware/touch_fw.ekt > /sys/bus/i2c/drivers/elan-ktf3k/1-0010/update_fw"
++service touch_fw_update /system/bin/touch_fw_update.sh
+     class main
+     disabled
+     user root
+     group root
+     oneshot
+ 
++
+diff --git a/keymaster/keymaster_grouper.cpp b/keymaster/keymaster_grouper.cpp
+index 7037ffd..65b64cb 100644
+--- a/keymaster/keymaster_grouper.cpp
++++ b/keymaster/keymaster_grouper.cpp
+@@ -25,7 +25,7 @@
+ #include <cutils/log.h>
+ 
+ #include <hardware/hardware.h>
+-#include <hardware/keymaster.h>
++#include <hardware/keymaster0.h>
+ 
+ #include <openssl/bn.h>
+ #include <openssl/err.h>
+@@ -67,7 +67,7 @@ struct PKCS8_PRIV_KEY_INFO_Delete {
+ };
+ typedef UniquePtr<PKCS8_PRIV_KEY_INFO, PKCS8_PRIV_KEY_INFO_Delete> Unique_PKCS8_PRIV_KEY_INFO;
+ 
+-typedef UniquePtr<keymaster_device_t> Unique_keymaster_device_t;
++typedef UniquePtr<keymaster0_device_t> Unique_keymaster0_device_t;
+ 
+ typedef UniquePtr<CK_BYTE[]> Unique_CK_BYTE;
+ 
+@@ -218,7 +218,7 @@ static void logOpenSSLError(const char* location) {
+  * Convert from OpenSSL's BIGNUM format to TEE's Big Integer format.
+  */
+ static ByteArray* bignum_to_array(const BIGNUM* bn) {
+-    const int bignumSize = BN_num_bytes(bn);
++    const unsigned int bignumSize = BN_num_bytes(bn);
+ 
+     Unique_CK_BYTE bytes(new CK_BYTE[bignumSize]);
+ 
+@@ -327,7 +327,7 @@ static int keyblob_restore(const CryptoSession* session, const uint8_t* keyBlob,
+             || find_single_object(p, ID_LENGTH, CKO_PRIVATE_KEY, session, private_key);
+ }
+ 
+-static int tee_generate_keypair(const keymaster_device_t* dev,
++static int tee_generate_keypair(const keymaster0_device_t* dev,
+         const keymaster_keypair_t type, const void* key_params,
+         uint8_t** key_blob, size_t* key_blob_length) {
+     CK_BBOOL bTRUE = CK_TRUE;
+@@ -406,7 +406,7 @@ static int tee_generate_keypair(const keymaster_device_t* dev,
+     return keyblob_save(objId.get(), key_blob, key_blob_length);
+ }
+ 
+-static int tee_import_keypair(const keymaster_device_t* dev,
++static int tee_import_keypair(const keymaster0_device_t* dev,
+         const uint8_t* key, const size_t key_length,
+         uint8_t** key_blob, size_t* key_blob_length) {
+     CK_RV rv;
+@@ -610,7 +610,7 @@ static int tee_import_keypair(const keymaster_device_t* dev,
+     return keyblob_save(objId.get(), key_blob, key_blob_length);
+ }
+ 
+-static int tee_get_keypair_public(const struct keymaster_device* dev,
++static int tee_get_keypair_public(const struct keymaster0_device* dev,
+         const uint8_t* key_blob, const size_t key_blob_length,
+         uint8_t** x509_data, size_t* x509_data_length) {
+ 
+@@ -722,7 +722,7 @@ static int tee_get_keypair_public(const struct keymaster_device* dev,
+     return 0;
+ }
+ 
+-static int tee_delete_keypair(const struct keymaster_device* dev,
++static int tee_delete_keypair(const struct keymaster0_device* dev,
+             const uint8_t* key_blob, const size_t key_blob_length) {
+ 
+     CryptoSession session(reinterpret_cast<CK_SESSION_HANDLE>(dev->context));
+@@ -751,7 +751,7 @@ static int tee_delete_keypair(const struct keymaster_device* dev,
+     return 0;
+ }
+ 
+-static int tee_sign_data(const keymaster_device_t* dev,
++static int tee_sign_data(const keymaster0_device_t* dev,
+         const void* params,
+         const uint8_t* key_blob, const size_t key_blob_length,
+         const uint8_t* data, const size_t dataLength,
+@@ -821,7 +821,7 @@ static int tee_sign_data(const keymaster_device_t* dev,
+     return 0;
+ }
+ 
+-static int tee_verify_data(const keymaster_device_t* dev,
++static int tee_verify_data(const keymaster0_device_t* dev,
+         const void* params,
+         const uint8_t* keyBlob, const size_t keyBlobLength,
+         const uint8_t* signedData, const size_t signedDataLength,
+@@ -877,7 +877,7 @@ static int tee_verify_data(const keymaster_device_t* dev,
+ 
+ /* Close an opened OpenSSL instance */
+ static int tee_close(hw_device_t *dev) {
+-    keymaster_device_t *keymaster_dev = (keymaster_device_t *) dev;
++    keymaster0_device_t *keymaster_dev = (keymaster0_device_t *) dev;
+     if (keymaster_dev != NULL) {
+         CK_SESSION_HANDLE handle = reinterpret_cast<CK_SESSION_HANDLE>(keymaster_dev->context);
+         if (handle != CK_INVALID_HANDLE) {
+@@ -902,7 +902,7 @@ static int tee_open(const hw_module_t* module, const char* name,
+     if (strcmp(name, KEYSTORE_KEYMASTER) != 0)
+         return -EINVAL;
+ 
+-    Unique_keymaster_device_t dev(new keymaster_device_t);
++    Unique_keymaster0_device_t dev(new keymaster0_device_t);
+     if (dev.get() == NULL)
+         return -ENOMEM;
+ 
+diff --git a/libdgv1/Android.mk b/libdgv1/Android.mk
+new file mode 100755
+index 0000000..30ee33a
+--- /dev/null
++++ b/libdgv1/Android.mk
+@@ -0,0 +1,26 @@
++# Copyright (C) 2015 The Android Open Source Project
++# Written by Dmitry Grinberg
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++
++LOCAL_PATH := $(call my-dir)
++
++
++include $(CLEAR_VARS)
++
++LOCAL_SHARED_LIBRARIES := liblog libcutils libutils libnvos
++LOCAL_SRC_FILES := libdgv1.c
++LOCAL_MODULE := libdgv1
++LOCAL_MODULE_TAGS := optional
++include $(BUILD_SHARED_LIBRARY)
+diff --git a/libdgv1/libdgv1.c b/libdgv1/libdgv1.c
+new file mode 100755
+index 0000000..4c7d3fb
+--- /dev/null
++++ b/libdgv1/libdgv1.c
+@@ -0,0 +1,78 @@
++#define LOG_TAG "libdgv1.so"
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <utils/Log.h>
++#include <string.h>
++#include <dlfcn.h>
++
++/*
++ * CURIOUS WHAT THE HELL IS GOING ON IN HERE? READ UP...
++ *
++ *
++ * Problems:
++ * 1. Nexus 7's GFX libraries were made to work with android L
++ * 2. Android M changed a few things around that make it not work
++ *   a. dlopen is now posix compliant and thus things like dlopen("egl/abc.so") will no longer look anywhere except root
++ * 3. Due to this, we must do something. GFX libs do not call dlopen() directly, they use libnvos.so
++ *
++ * Curious data snippets
++ *  Due to peculiarities of the ELF format, when a binary baz imports function foo() from libbar.so,
++ *   nowhere in baz's ELF file does it say that foo() must from from libbar. In fact there are two
++ *   separate records. One that says that libbar is "NEED"ed, and another that says that there is an
++ *   import of function "foo". What that means is that if the process wer to also load libxyz, which
++ *   also exported foo(), there is no way to be sure which foo() would get called. Why do we care?
++ *   Well, consider out problems above. We need to provide functions and variables that existing
++ *   libraries no longer do. How?
++ *
++ * A tricky but clever solution: INTERPOSITION library
++ * 1. We'll edit the libnvos.so and replace one of its "NEED" record with one referencing a new library
++ *    which we'll create. Need a library name? why not "dmitrygr1.so"? We'll also edit the function name
++ *    from dlopen to LibLdr() to make sure our function gets called.
++ * 2. Make sure that dmitrygr1.so's NEED records include the library whose record we replaced in libnvos.so
++ *    library, to make sure that the linker brings it in afterall and all symbols in it are found
++ * 3. Implement dmitrygr1.so such that it provides LibLdr() and backs that wil a proper clal to dlopen()
++ *    with eht proper psth
++ * 
++ * Result: GFX libraries works on M, with the help of dmitrygr1.so and a small binary patch to libnvos.so
++ */
++
++
++typedef uintptr_t NvError;
++struct NvOsLibraryHandle;
++
++
++NvError NvOsLibraryLoad(const char *name, struct NvOsLibraryHandle *library);
++
++NvError dmitrygr_libldr(const char *name, struct NvOsLibraryHandle *library)
++{
++    static const char *prepend = "/system/lib/";
++    char *path;
++    NvError err;
++
++    err = NvOsLibraryLoad(name, library);
++    if (!err)
++        return err;
++
++    //now try full path
++    //then try in /system/lib
++    path = malloc(strlen(name) + strlen(prepend) + 1);
++    if (!path)
++        return err;
++    sprintf(path, "%s%s", prepend, name);
++    err = NvOsLibraryLoad(path, library);
++    if (!err)
++        ALOGI("Just saved you by loading '%s' instead of '%s'", path, name);
++    free(path);
++
++    return err;
++}
++
++
++void libEvtLoading(void) __attribute__((constructor));
++void libEvtLoading(void)
++{
++    ALOGI("Loaded to help save your day\n");
++
++}
++
+diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
+index ab21b67..3528006 100644
+--- a/overlay/frameworks/base/core/res/res/values/config.xml
++++ b/overlay/frameworks/base/core/res/res/values/config.xml
+@@ -84,7 +84,7 @@
+     The default represents a dual-mode smartphone -->
+     <string translatable="false" name="config_wifi_p2p_device_type">1-0050F204-1</string>
+ 
+-    <bool name="config_ui_enableFadingMarquee">true</bool>
++    <bool name="config_ui_enableFadingMarquee">false</bool>
+ 
+     <!-- List of file paths for USB host busses to exclude from USB host support.
+          For example, if the first USB bus on the device is used to communicate
+@@ -238,4 +238,7 @@
+     <!-- reference volume index for music stream to limit headphone volume and display warning -->
+     <integer name="config_safe_media_volume_index">6</integer>
+ 
++    <!-- Set lowmemorykiller threshold -->
++    <integer name="config_lowMemoryKillerMinFreeKbytesAbsolute">16384</integer>
++
+ </resources>
+diff --git a/self-extractors/nvidia/staging/device-partial.mk b/self-extractors/nvidia/staging/device-partial.mk
+index 4b5399e..1193a37 100644
+--- a/self-extractors/nvidia/staging/device-partial.mk
++++ b/self-extractors/nvidia/staging/device-partial.mk
+@@ -21,9 +21,9 @@ PRODUCT_PACKAGES := \
+     nvavp_vid_ucode_alt \
+     nvcamera \
+     nvram \
+-    libEGL_tegra \
+-    libGLESv1_CM_tegra \
+-    libGLESv2_tegra \
++    libEGL \
++    libGLESv1_CM \
++    libGLESv2 \
+     gralloc.tegra3 \
+     hwcomposer.tegra3 \
+     libardrv_dynamic \
+diff --git a/self-extractors/nvidia/staging/proprietary/Android.mk b/self-extractors/nvidia/staging/proprietary/Android.mk
+index 023fb02..41d0aa9 100644
+--- a/self-extractors/nvidia/staging/proprietary/Android.mk
++++ b/self-extractors/nvidia/staging/proprietary/Android.mk
+@@ -57,8 +57,8 @@ LOCAL_MODULE_OWNER := nvidia
+ include $(BUILD_PREBUILT)
+ 
+ include $(CLEAR_VARS)
+-LOCAL_MODULE := libEGL_tegra
+-LOCAL_SRC_FILES := libEGL_tegra.so
++LOCAL_MODULE := libEGL
++LOCAL_SRC_FILES := libEGL.so
+ LOCAL_MODULE_SUFFIX := .so
+ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+ LOCAL_MODULE_PATH := $(TARGET_OUT)/lib/egl
+@@ -67,8 +67,8 @@ LOCAL_MODULE_OWNER := nvidia
+ include $(BUILD_PREBUILT)
+ 
+ include $(CLEAR_VARS)
+-LOCAL_MODULE := libGLESv1_CM_tegra
+-LOCAL_SRC_FILES := libGLESv1_CM_tegra.so
++LOCAL_MODULE := libGLESv1_CM
++LOCAL_SRC_FILES := libGLESv1_CM.so
+ LOCAL_MODULE_SUFFIX := .so
+ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+ LOCAL_MODULE_PATH := $(TARGET_OUT)/lib/egl
+@@ -77,8 +77,8 @@ LOCAL_MODULE_OWNER := nvidia
+ include $(BUILD_PREBUILT)
+ 
+ include $(CLEAR_VARS)
+-LOCAL_MODULE := libGLESv2_tegra
+-LOCAL_SRC_FILES := libGLESv2_tegra.so
++LOCAL_MODULE := libGLESv2
++LOCAL_SRC_FILES := libGLESv2.so
+ LOCAL_MODULE_SUFFIX := .so
+ LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+ LOCAL_MODULE_PATH := $(TARGET_OUT)/lib/egl
+diff --git a/sensors-config/Android.mk b/sensors-config/Android.mk
+new file mode 100755
+index 0000000..f5c087e
+--- /dev/null
++++ b/sensors-config/Android.mk
+@@ -0,0 +1,26 @@
++# Copyright (C) 2015 The Android Open Source Project
++# Written by Dmitry Grinberg
++#
++# Licensed under the Apache License, Version 2.0 (the "License");
++# you may not use this file except in compliance with the License.
++# You may obtain a copy of the License at
++#
++#      http://www.apache.org/licenses/LICENSE-2.0
++#
++# Unless required by applicable law or agreed to in writing, software
++# distributed under the License is distributed on an "AS IS" BASIS,
++# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++# See the License for the specific language governing permissions and
++# limitations under the License.
++
++
++LOCAL_PATH := $(call my-dir)
++
++
++include $(CLEAR_VARS)
++
++LOCAL_SHARED_LIBRARIES := liblog libcutils
++LOCAL_SRC_FILES := sensors-config.c
++LOCAL_MODULE := sensors-config
++LOCAL_MODULE_TAGS := optional
++include $(BUILD_EXECUTABLE)
+diff --git a/sensors-config/sensors-config.c b/sensors-config/sensors-config.c
+new file mode 100755
+index 0000000..4f8b0ed
+--- /dev/null
++++ b/sensors-config/sensors-config.c
+@@ -0,0 +1,192 @@
++#include <android/log.h>
++#include <sys/mount.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <stdbool.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <pwd.h>
++#include <grp.h>
++
++/*
++ * This is a port of NVIDIA's sensors-config binary-only tool. Produced by me,
++ * dmitrygr@gmail.com from disassembly of that tool. Why? They kernel directly
++ * opens and reads /data/lightsensor/AL3010_Config.ini, using file open apis
++ * this is incredibly unsafe in so many ways! Why? Read this article and come
++ * back here: http://www.linuxjournal.com/article/8110 . Ok, so how do we I
++ * plan to fix this? I modified the kernel to instead add a sysfs node to which
++ * one can write the calibration value. Only problem is, that file the kernel
++ * reads is only written by sensors-config. Well, so off I went looking for its
++ * source, only to find that none exist. I disassembled it, and it was riddled
++ * with calls to system(), which further boiled my blood. Luckily it is a rather
++ * small executable, so I decided to rewrite it from scratch. And that is what
++ * you see here in front of you now. It is a faithful reproduction, including
++ * code paths for sensors not present in grouper and some of the bad choices
++ * (but not all), and some bad design (but nto all). This way if ever ever come
++ * across any other device using this sensors-config binary, you can feel free
++ * to trash it and replace it with this one.
++ */
++
++#define LOG_TAG "Sensor Daemon"
++#define LOGI(...) 	__android_log_print(ANDROID_LOG_INFO , LOG_TAG, __VA_ARGS__)
++#define LOGE(...) 	__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
++
++
++static const char *calPartSensorsPath = "/data/calibration/sensors";
++static uid_t uid_system = 1000; //in case we cnanot get this info, this is a backup
++static gid_t gid_system = 1000; //in case we cnanot get this info, this is a backup
++
++static bool file_copy(const char *from_file_path, const char *to_file_path)
++{
++	FILE *fi, *fo;
++	bool ret = false;
++	char buf[1024];
++	
++	fi = fopen(from_file_path, "r");
++	if (fi) {
++ 		fo = fopen(to_file_path, "w");
++		if (fo) {
++			int c;
++			
++			ret = true;
++			while(fgets(buf, sizeof(buf), fi)) {
++				if (EOF == fputs(buf, fo)) {
++					ret = false;
++					break;
++				}
++			}
++			if (ferror(fi) || ferror(fo))
++				ret = false;
++			fclose(fo);
++		}
++		fclose(fi);
++	}
++	
++	return ret;
++}
++
++static void update_some_file(const char *from, const char *to, const char* nameForErr)
++{
++			
++	if (access(from, R_OK))
++		return;
++
++	(void)mkdir(calPartSensorsPath, 0777);
++	(void)file_copy(from, to);
++	if (access(to, R_OK))
++		LOGE("copy file to PER FAIL, path: %s", nameForErr);
++}
++
++static void update_ami_file(const char *name)
++{
++	static const char *amiDirPath = "/data/amit";
++	char from[1024];
++	char to[1024];
++	
++	snprintf(from, sizeof(from), "%s/%s", amiDirPath, name);
++	snprintf(to, sizeof(to), "%s/%s", calPartSensorsPath, name);
++	
++	update_some_file(from, to, name);
++}
++
++static void update_generic_file(const char *name)
++{
++	char from[1024];
++	char to[1024];
++	
++	snprintf(from, sizeof(from), "/data/%s", name);
++	snprintf(to, sizeof(to), "/data/calibration/sensors/%s", name);
++	
++	update_some_file(from, to, name);
++}
++
++static void copy_file_from_per(const char *name)
++{
++	char from[1024];
++	char to[1024];
++	
++	snprintf(from, sizeof(from), "/data/calibration/%s", name);
++	snprintf(to, sizeof(to), "/data/%s", name);
++
++	if (!file_copy(from, to))
++		LOGE("Failed to copy '%s' -> '%s'", from, to);
++}
++
++static void set_perms_object(const char *path, mode_t mode)
++{
++	(void)chown(path, uid_system, gid_system);
++	(void*)chmod(path, mode);
++}
++
++static void set_perms_file(const char *name, mode_t mode)
++{
++	char path[1024];
++	
++	snprintf(path, sizeof(path), "/data/sensors/%s", name);
++
++	set_perms_object(path, mode);
++}
++
++int main(int argc, char** argv)
++{
++	static const char *calPartDev = "/dev/block/platform/sdhci-tegra.3/by-name/PER";
++	static const char *calPartMountPt = "/data/calibration";
++	struct passwd *p;
++	struct group *g;
++	
++	LOGI("Sensors-load-config: Service started, Version: 1.2.dmitrygr");
++	(void)argc;
++	(void)argv;
++	
++	//get uids and gids if we can
++	if ((p = getpwnam("system")) != NULL)
++		uid_system = p->pw_uid;
++	if ((g = getgrnam("system")) != NULL)
++		gid_system = g->gr_gid;
++	
++	//do the weird thigns this thing must do
++	(void)mkdir("/data/calibration" ,0777);
++	(void)mkdir("/data/sensors", 0777);
++	(void)mkdir("/data/lightsensor", 0777);
++	(void)mkdir(calPartMountPt, 0777);
++	
++	//their code mounted and unmounted the FS many times - but there is no point - just do it once here and live with it
++	if (mount(calPartDev, calPartMountPt, "vfat", 0, NULL))
++		LOGE("Can't mount PER file system !");
++	else {
++		update_ami_file("AMI304_Config.ini");
++		update_ami_file("AMI306_Config.ini");
++		update_generic_file("KXTF9_Calibration.ini");
++		update_generic_file("Accel_Config.ini");
++		update_generic_file("MPU6050_Config.ini");
++		
++		copy_file_from_per("/sensors/KXTF9_Calibration.ini");
++		copy_file_from_per("/sensors/MPU6050_Config.ini");
++		copy_file_from_per("/sensors/Accel_Config.ini");
++		copy_file_from_per("/sensors/AMI304_Config.ini");
++		copy_file_from_per("/sensors/AMI306_Config.ini");
++		copy_file_from_per("/lightsensor/AL3010_Config.ini");
++
++		(void)umount(calPartMountPt);
++	}
++	(void)rmdir(calPartMountPt);
++	
++	//set permissions, etc
++	set_perms_object("/data/sensors", 0751);
++	set_perms_object("/data/lightsensor", 0751);
++	set_perms_file("/sensors/KXTF9_Calibration.ini", 0751);
++	set_perms_file("/sensors/MPU6050_Config.ini", 0751);
++	set_perms_file("/sensors/Accel_Config.ini", 0751);
++	set_perms_file("/sensors/AMI304_Config.ini", 0751);
++	set_perms_file("/sensors/AMI306_Config.ini", 0751);
++	set_perms_file("/lightsensor/AL3010_Config.ini", 0644);
++	
++	(void)chown("/data/sensors/KXTF9_Calibration.ini", uid_system, gid_system);
++	
++	//now load the lightsensor calibration value into the kernel the proper way (the whole reason we're here)
++	file_copy("/data/lightsensor/AL3010_Config.ini", "/sys/devices/platform/tegra-i2c.2/i2c-2/2-001c/calibration");
++
++	return 0;
++}
++
+diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
+index fe30a49..3e746c8 100644
+--- a/sepolicy/file_contexts
++++ b/sepolicy/file_contexts
+@@ -21,11 +21,22 @@
+ /data/tf(/.*)?                    u:object_r:tee_data_file:s0
+ 
+ /system/bin/brcm_patchram_plus -- u:object_r:hci_attach_exec:s0
+-/system/bin/glgps              -- u:object_r:gpsd_exec:s0
+ /system/bin/sensors-config     -- u:object_r:sensors_config_exec:s0
+ 
+ /sys/devices/tegradc\.0(/.*)?                u:object_r:sysfs_devices_tegradc:s0
+ /sys/devices/tegradc\.1(/.*)?                u:object_r:sysfs_devices_tegradc:s0
+-/sys/devices/platform/tegra-i2c.1/i2c-1/1-0010/update_fw    --  u:object_r:sysfs_firmware_writable:s0
++/sys/devices/platform/tegra-i2c.1/i2c-1/1-0010/update_fw    u:object_r:sysfs_firmware_writable:s0
+ /sys/devices/platform/bcm4330_rfkill/rfkill/rfkill0/state   --  u:object_r:sysfs_bluetooth_writable:s0
+ /sys/devices/platform/bcm4330_rfkill/rfkill/rfkill0/type    --  u:object_r:sysfs_bluetooth_writable:s0
++
++/sys/class/gpio/gpio162/value      u:object_r:sysfs_firmware_writable:s0
++/sys/class/gpio/gpio162/direction      u:object_r:sysfs_firmware_writable:s0
++
++/dev/block/mmcblk0                 u:object_r:root_block_device:s0
++/dev/block/platform/sdhci-tegra.3/by-name/UDA     u:object_r:userdata_block_device:s0
++/dev/block/platform/sdhci-tegra.3/by-name/CAC     u:object_r:cache_block_device:s0
++/dev/block/zram0     u:object_r:swap_block_device:s0
++
++/system/bin/setup_fs	--	u:object_r:setupfs_exec:s0
++/system/bin/touch_fw_update.sh        u:object_r:touchfw_exec:s0
++/system/bin/gps_daemon.sh        u:object_r:glgps_exec:s0
+diff --git a/sepolicy/fsck.te b/sepolicy/fsck.te
+new file mode 100755
+index 0000000..a68a1d5
+--- /dev/null
++++ b/sepolicy/fsck.te
+@@ -0,0 +1,3 @@
++allow fsck userdata_block_device:blk_file rw_file_perms;
++allow fsck cache_block_device:blk_file rw_file_perms;
++
+diff --git a/sepolicy/gpsd.te b/sepolicy/gpsd.te
+index 6b43a38..28249a8 100644
+--- a/sepolicy/gpsd.te
++++ b/sepolicy/gpsd.te
+@@ -1 +1,17 @@
+-allow gpsd self:process execmem;
++type glgps, domain;
++type glgps_exec, exec_type, file_type;
++
++# Started by init
++init_daemon_domain(glgps)
++
++allow glgps shell_exec:file r_file_perms;
++
++#for text relocs & execution
++allow glgps system_file:file { execute_no_trans execmod };
++allow glgps gps_device:chr_file { getattr setattr };
++allow glgps gps_data_file:dir { search write add_name remove_name };
++allow glgps gps_data_file:file { create rw_file_perms };
++allow glgps gps_data_file:fifo_file { unlink create setattr getattr rw_file_perms };
++allow glgps sysfs:file { setattr write };
++allow glgps gps_device:chr_file { ioctl open read write };
++allow glgps glgps:udp_socket { create };
+diff --git a/sepolicy/init_shell.te b/sepolicy/init_shell.te
+index 8b83b9a..ad13b9b 100644
+--- a/sepolicy/init_shell.te
++++ b/sepolicy/init_shell.te
+@@ -1,5 +1,9 @@
+-allow init_shell sysfs_firmware_writable:file w_file_perms;
++#allow init_shell sysfs_firmware_writable:file w_file_perms;
++#
++## Kernel bug for Linux < 3.3: sysfs inodes can lose their security context
++## and revert to the base sysfs type.
++allow init sysfs:file write;
+ 
+-# Kernel bug for Linux < 3.3: sysfs inodes can lose their security context
+-# and revert to the base sysfs type.
+-allow init_shell sysfs:file write;
++allow init sysfs_firmware_writable:file write;
++
++allow init sysfs_devices_tegradc:lnk_file { read };
+diff --git a/sepolicy/keystore.te b/sepolicy/keystore.te
+index 9ed4e8d..1b98b4e 100644
+--- a/sepolicy/keystore.te
++++ b/sepolicy/keystore.te
+@@ -1 +1,3 @@
+-allow keystore self:process execmem;
++
++# For text relocations in /system/lib/libtf_crypto_sst.so
++allow keystore system_file:file execmod;
+diff --git a/sepolicy/mediaserver.te b/sepolicy/mediaserver.te
+index 0a1fefc..8cf9a60 100644
+--- a/sepolicy/mediaserver.te
++++ b/sepolicy/mediaserver.te
+@@ -1 +1,4 @@
+ allow mediaserver { gpu_device nvhost_device }:chr_file rw_file_perms;
++
++#text relocs in nvidia things
++allow mediaserver system_file:file execmod;
+diff --git a/sepolicy/recovery.te b/sepolicy/recovery.te
+index 6f20993..7965eaf 100644
+--- a/sepolicy/recovery.te
++++ b/sepolicy/recovery.te
+@@ -2,10 +2,10 @@ recovery_only(`
+   allow recovery ctl_rildaemon_prop:property_service set;
+   allow recovery device:dir rw_dir_perms;
+   allow recovery rootfs:dir rw_dir_perms;
+-  allow recovery rootfs:file create_file_perms;
++ # allow recovery rootfs:file create_file_perms;
+   allow recovery sysfs_devices_system_cpu:file rw_file_perms;
+-  allow recovery self:capability mknod;
++ # allow recovery self:capability mknod;
+   allow recovery usbfs:dir rw_dir_perms;
+-  allow recovery device:chr_file create_file_perms;
++ # allow recovery device:chr_file create_file_perms;
+ ')
+ 
+diff --git a/sepolicy/setup_fs.te b/sepolicy/setup_fs.te
+new file mode 100755
+index 0000000..e6bfc0d
+--- /dev/null
++++ b/sepolicy/setup_fs.te
+@@ -0,0 +1,14 @@
++type setupfs, domain;
++type setupfs_exec, exec_type, file_type;
++
++init_daemon_domain(setupfs)
++
++allow setupfs userdata_block_device:blk_file rw_file_perms;
++allow setupfs cache_block_device:blk_file rw_file_perms;
++allow setupfs block_device:dir search;
++
++
++# Only allow entry from init
++neverallow { domain -init } setupfs:process transition;
++neverallow domain setupfs:process dyntransition;
++neverallow setupfs { file_type fs_type -setupfs_exec }:file entrypoint;
+diff --git a/sepolicy/system_server.te b/sepolicy/system_server.te
+index 3f61fdc..4ca811c 100644
+--- a/sepolicy/system_server.te
++++ b/sepolicy/system_server.te
+@@ -2,9 +2,12 @@ allow system_server { knv_device }:chr_file rw_file_perms;
+ allow system_server elan_ip_device:chr_file rw_file_perms;
+ 
+ # Access .gps.interface.pipe.to_gpsd.
+-allow system_server gps_data_file:dir search;
+-allow system_server gps_data_file:fifo_file { setattr rw_file_perms };
++allow system_server gps_data_file:dir rw_dir_perms;
++allow system_server gps_data_file:fifo_file { setattr rw_file_perms create };
+ 
+ # Access /data/sensors.
+ allow system_server sensors_data_file:dir r_dir_perms;
+ allow system_server sensors_data_file:file r_file_perms;
++
++#text relocs
++allow system_server system_file:file execmod;
+diff --git a/sepolicy/touchfw.te b/sepolicy/touchfw.te
+new file mode 100755
+index 0000000..45a1805
+--- /dev/null
++++ b/sepolicy/touchfw.te
+@@ -0,0 +1,10 @@
++type touchfw, domain;
++type touchfw_exec, exec_type, file_type;
++
++# Started by init
++init_daemon_domain(touchfw)
++
++# Access to /sys/bus/i2c/drivers/elan-ktf3k/1-0010/update_fw
++allow touchfw sysfs_firmware_writable:file w_file_perms;
++
++allow touchfw shell_exec:file r_file_perms;
+diff --git a/touch_fw_update.sh b/touch_fw_update.sh
+new file mode 100755
+index 0000000..e298aa8
+--- /dev/null
++++ b/touch_fw_update.sh
+@@ -0,0 +1,3 @@
++#!/system/bin/sh
++
++echo /system/etc/firmware/touch_fw.ekt > /sys/bus/i2c/drivers/elan-ktf3k/1-0010/update_fw
+-- 
+1.9.1
+
