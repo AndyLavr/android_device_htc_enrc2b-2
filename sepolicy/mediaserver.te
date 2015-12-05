@@ -8,3 +8,5 @@ allow mediaserver camera_prop:property_service set;
 
 allow mediaserver cpuctl_device:dir search;
 allow mediaserver cpuctl_device:dir search;
+
+allow mediaserver gsm0710mux:unix_stream_socket { connectto read write setopt };

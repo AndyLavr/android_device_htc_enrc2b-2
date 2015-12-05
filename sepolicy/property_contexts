@@ -1,3 +1,7 @@
-camera.start.preview		u:object_r:camera_prop:s0
+camera.start.preview        u:object_r:camera_prop:s0
 media.tegra.hw.ac3dec       u:object_r:camera_prop:s0
 media.tegra.hw.dtsdec       u:object_r:camera_prop:s0
+
+# ctl properties
+ctl.gsm0710mux              u:object_r:ctl_gsm0710mux_prop:s0
+

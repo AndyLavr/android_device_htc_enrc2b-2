@@ -1,1 +1,2 @@
 type camera_prop, property_type;
+type ctl_gsm0710mux_prop, property_type;

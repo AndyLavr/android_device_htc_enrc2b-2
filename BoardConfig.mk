@@ -96,26 +96,27 @@ BOARD_SEPOLICY_UNION += \
     file_contexts \
     property_contexts \
     service_contexts \
-		adbd.te \
+    adbd.te \
     drmserver.te \
-	bluetooth.te \
-	drmserver.te \
+    bluetooth.te \
+    drmserver.te \
     gpsd.te \
     hdmid.te \
     healthd.te \
     init.te \
-		installd.te \
+    installd.te \
     kernel.te \
     lmkd.te \
     mediaserver.te \
+    gsm0710mux.te \
     property.te \
     radio.te \
     recovery.te \
     rild.te \
     sensors_config.te \
-		shell.te \
+    shell.te \
     surfaceflinger.te \
     system_app.te \
     system_server.te \
-		untrusted_app.te \
+    untrusted_app.te \
     zygote.te

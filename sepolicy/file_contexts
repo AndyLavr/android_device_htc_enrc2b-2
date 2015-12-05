@@ -6,11 +6,11 @@
 
 #Gps
 /system/bin/glgps                 u:object_r:gpsd_exec:s0
-/dev/socket/rild-agps			  u:object_r:gps_socket:s0
+/dev/socket/rild-agps             u:object_r:gps_socket:s0
 /dev/ttyHS4                       u:object_r:gps_device:s0
 
 #Battery
-/dev/tps80032_gauge				  u:object_r:htcbatt_device:s0
+/dev/tps80032_gauge               u:object_r:htcbatt_device:s0
 
 #Ril
 /dev/ttyACM0                      u:object_r:radio_device:s0
@@ -20,7 +20,9 @@
 /data/calibration(/.*)?           u:object_r:sensors_data_file:s0
 /data/lightsensor(/.*)?           u:object_r:sensors_data_file:s0
 /data/sensors(/.*)?               u:object_r:sensors_data_file:s0
-/data/nvcam(/.*)?				  u:object_r:camera_data_file:s0
+/data/nvcam(/.*)?                 u:object_r:camera_data_file:s0
 /dev/timerirq                     u:object_r:sensors_device:s0
 /dev/ov8838                       u:object_r:camera_device:s0
 /system/bin/sensorservice      -- u:object_r:sensors_config_exec:s0
+
+/system/bin/gsm0710mux            u:object_r:gsm0710mux_exec:s0
