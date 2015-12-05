@@ -20,11 +20,11 @@ ro.media.enc.jpeg.quality=100
 
 # RIL
 rild.libpath=/system/lib/libhtc_ril.so
-rild.libargs=-e wwan0
+rild.libargs=-d /dev/ACM0 -i wwan0
 ro.telephony.ril.v3=signalstrength,skipbrokendatacall
 ro.telephony.ril.config=signalstrength,skipbrokendatacall
 modem.power.device=/sys/class/gpio/gpio32/value,0,1
-ro.ril.devicename=/dev/ttyACM1
+ro.ril.devicename=/dev/ttyACM0
 modem.powercontrol=disabled
 ro.ril.ecc.VODA-Africa-South=112,911,999
 ro.ril.ecc.HTC-GCC=999,112,997
