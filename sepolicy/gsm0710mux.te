@@ -1,5 +1,5 @@
 type gsm0710mux, domain;
-type gsm0710muxd_exec, exec_type, file_type;
+type gsm0710mux_exec, exec_type, file_type;
 
 init_daemon_domain(gsm0710mux)
 net_domain(gsm0710mux)

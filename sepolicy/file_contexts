@@ -25,4 +25,4 @@
 /dev/ov8838                       u:object_r:camera_device:s0
 /system/bin/sensorservice      -- u:object_r:sensors_config_exec:s0
 
-/system/bin/gsm0710muxd           u:object_r:gsm0710muxd_exec:s0
+/system/bin/gsm0710muxd           u:object_r:gsm0710mux_exec:s0
