@@ -73,7 +73,7 @@ ro.ril.stkprof.param=FFFFFFFF7F1D00DFB703021F22000000830000000000401000000000000
 
 # Disable LTE
 telephony.lteOnGsmDevice=0
-ro.telephony.default_network=3
+ro.telephony.default_network=0
 
 # Support HW reset dialog
 ro.product.hwreset = 1
