@@ -20,7 +20,7 @@ ro.media.enc.jpeg.quality=100
 
 # RIL
 rild.libpath=/system/lib/libhtc_ril.so
-rild.libargs=-d /dev/ACM0
+rild.libargs=-e wwan0
 ro.telephony.ril.v3=signalstrength,skipbrokendatacall
 ro.telephony.ril.config=signalstrength,skipbrokendatacall
 modem.power.device=/sys/class/gpio/gpio32/value,0,1

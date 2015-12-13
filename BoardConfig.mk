@@ -108,7 +108,6 @@ BOARD_SEPOLICY_UNION += \
     kernel.te \
     lmkd.te \
     mediaserver.te \
-    gsm0710mux.te \
     property.te \
     radio.te \
     recovery.te \
