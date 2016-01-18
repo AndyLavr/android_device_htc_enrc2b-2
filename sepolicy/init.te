@@ -1,2 +1,4 @@
-# needed by bdaddrwriter
+# Needed by bdaddrwriter
 allow init vfat:dir { search };
+# Needed by iptables
+allow init self:rawip_socket { create read write getattr setattr getopt setopt };

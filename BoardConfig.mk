@@ -111,7 +111,9 @@ BOARD_SEPOLICY_UNION += \
     property.te \
     radio.te \
     recovery.te \
+    netd.te \
     rild.te \
+    hostapd.te \
     sensors_config.te \
     shell.te \
     surfaceflinger.te \

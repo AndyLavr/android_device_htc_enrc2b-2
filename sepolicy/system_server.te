@@ -17,6 +17,7 @@ allow system_server fuse:dir search;
 # Access .gps.interface.pipe.to_gpsd.
 allow system_server gps_data_file:dir search;
 allow system_server gps_data_file:fifo_file { setattr rw_file_perms };
+allow system_server gps_data_file:fifo_file create;
 
 # Allow htcbatt
 allow system_server htcbatt_device:chr_file { ioctl read write getattr lock append open };

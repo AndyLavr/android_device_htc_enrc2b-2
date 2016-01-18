@@ -1,1 +1,2 @@
 allow shell cpuctl_device:dir search;
+allow shell su:process signal;

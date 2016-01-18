@@ -6,10 +6,11 @@ allow rild radio_device:chr_file setattr;
 allow rild self:capability fsetid;
 allow rild init:dir search;
 allow rild kernel:dir search;
-allow rild system_data_file:file { write setattr };
 
 # Talk to agpsd
 allow gpsd rild:unix_stream_socket { connectto };
 
 # Fix
 allow rild ctl_gsm0710mux_prop:property_service set;
+allow rild system_data_file:file { write read open create setattr };
+allow rild system_data_file:dir { write read open add_name create getattr };
