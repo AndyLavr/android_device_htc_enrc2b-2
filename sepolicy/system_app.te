@@ -1,8 +1,7 @@
 allow system_app sysfs_devices_tegradc:file rw_file_perms;
 allow system_app sysfs_devices_tegradc:dir rw_dir_perms;
 allow system_app sysfs_devices_tegradc:lnk_file read;
-allow system_app system_app_data_file:file execute;
-allow system_app system_app_data_file:file execute_no_trans;
+allow system_app system_app_data_file:file { execute execute_no_trans };
 allow system_app installd:dir search;
 allow system_app sysfs_writable:file { write read open getattr };
 

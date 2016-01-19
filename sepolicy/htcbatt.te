@@ -1,6 +1,3 @@
-allow htcbatt device:chr_file { read write };
-allow htcbatt device:chr_file open;
-allow htcbatt device:chr_file ioctl;
-allow htcbatt sysfs_writable:file read;
-allow htcbatt sysfs_writable:file open;
+allow htcbatt device:chr_file { open read write ioctl };
+allow htcbatt sysfs_writable:file { open read };
 allow htcbatt system_data_file:dir read;

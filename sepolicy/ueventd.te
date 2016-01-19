@@ -1,3 +1,2 @@
-allow ueventd sysfs_writable:file write;
-allow ueventd sysfs_writable:file open;
+allow ueventd sysfs_writable:file { write open };
 allow ueventd app_data_file:file relabelto;

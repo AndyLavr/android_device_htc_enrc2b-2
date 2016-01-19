@@ -6,6 +6,6 @@ allow gpsd system_data_file:dir write;
 allow gpsd devpts:chr_file rw_file_perms;
 allow gpsd system_data_file:dir add_name;
 
-allow domain system_data_file : dir { getattr search } ;
+allow domain system_data_file : dir { getattr search };
 
-allow system_server gps_data_file : fifo_file { ioctl read write getattr setattr lock append open } ;
+allow system_server gps_data_file : fifo_file { ioctl read write getattr setattr lock append open };
