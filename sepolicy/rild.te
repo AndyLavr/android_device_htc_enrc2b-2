@@ -14,3 +14,5 @@ allow gpsd rild:unix_stream_socket { connectto };
 allow rild ctl_gsm0710mux_prop:property_service set;
 allow rild system_data_file:file { write read open create setattr };
 allow rild system_data_file:dir { write read open add_name create getattr };
+allow rild init:file read;
+allow rild kernel:file read;

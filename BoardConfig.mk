@@ -113,6 +113,7 @@ BOARD_SEPOLICY_UNION += \
     recovery.te \
     netd.te \
     rild.te \
+    vold.te \
     hostapd.te \
     sensors_config.te \
     shell.te \
