@@ -53,6 +53,7 @@ lib/hw/gps.tegra.so
 lib/hw/local_time.default.so
 lib/hw/sensors.enrc2b.so
 lib/hw/vendor-camera.tegra.so
+lib/soundfx/libv4a_fx_ics.so
 lib/libardrv_dynamic.so
 lib/libBeautyChat.so
 lib/libbt-aptx-4.1.1.so
@@ -134,6 +135,7 @@ lib/libscalado.so
 lib/libsensors_mpl.so
 lib/libsystem_server.so
 lib/tf_crypto_sst.so
+vendor/etc/audio_effects.conf
 vendor/firmware/libpn544_fw.so
 vendor/firmware/mfg.bin
 etc/soundimage/board_version.txt

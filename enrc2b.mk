@@ -66,7 +66,10 @@ PRODUCT_PACKAGES += \
     nfc.enrc2b \
     Nfc \
     Tag
-    
+
+# ViperFX packages
+PRODUCT_PACKAGES += \
+    viperfx
 
 # Power
 PRODUCT_PACKAGES += \
