@@ -10,7 +10,7 @@ allow untrusted_app userinit_exec:file getattr;
 allow untrusted_app vdc_exec:file getattr;
 allow untrusted_app vold_exec:file getattr;
 allow untrusted_app wpa_exec:file getattr;
-allow untrusted_app recovery_cache_file:dir { getattr read };
+allow untrusted_app recovery_cache_file:dir { open getattr read };
 allow untrusted_app bootanim_exec:file getattr;
 allow untrusted_app clatd_exec:file getattr;
 allow untrusted_app debuggerd_exec:file getattr;

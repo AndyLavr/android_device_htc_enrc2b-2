@@ -1,11 +1,10 @@
 allow gpsd self:process execmem;
 allow gpsd self:capability dac_override;
-allow gpsd system_data_file:dir write;
+allow gpsd system_data_file:dir { write add_name };
 
 #Allow writing to pts
 allow gpsd devpts:chr_file rw_file_perms;
-allow gpsd system_data_file:dir add_name;
 
-allow domain system_data_file : dir { getattr search };
-
-allow system_server gps_data_file : fifo_file { ioctl read write getattr setattr lock append open };
+allow domain system_data_file:dir { getattr search };
+allow system_server gps_data_file:fifo_file { ioctl read write getattr setattr lock append open };
+allow gpsd system_data_file:file { open read write create setattr };

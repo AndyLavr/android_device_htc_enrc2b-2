@@ -7,3 +7,6 @@ allow mediaserver system_server:unix_stream_socket rw_stream_socket_perms;
 allow mediaserver camera_prop:property_service set;
 
 allow mediaserver cpuctl_device:dir search;
+
+# ViperFX
+allow mediaserver mediaserver_tmpfs:file { open read write execute };
