@@ -98,6 +98,7 @@ BOARD_SEPOLICY_UNION += \
     service_contexts \
     adbd.te \
     drmserver.te \
+    debuggerd.te \
     bluetooth.te \
     drmserver.te \
     gpsd.te \
