@@ -117,15 +117,15 @@ service cand /system/bin/cand
     class main
     user root
 
-# Redirect GOOGLE Dns (TCP)
-service google_tcp /system/bin/iptables -t nat -I OUTPUT -p tcp --dport 53 -j DNAT --to-destination 8.8.8.8:53
+# Redirect GOOGLE Dns (UDP)
+service google_udp /system/bin/iptables -t nat -I OUTPUT -p udp --dport 53 -j DNAT --to-destination 8.8.8.8:53
     class main
     user root
     group root
     oneshot
 
-# Redirect GOOGLE Dns (UDP)
-service google_udp /system/bin/iptables -t nat -I OUTPUT -p udp --dport 53 -j DNAT --to-destination 8.8.8.8:53
+# Redirect GOOGLE Dns (TCP)
+service google_tcp /system/bin/iptables -t nat -I OUTPUT -p tcp --dport 53 -j DNAT --to-destination 8.8.8.8:53
     class main
     user root
     group root
