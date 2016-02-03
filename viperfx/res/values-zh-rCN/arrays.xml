@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
     <string-array name="drvinst_prefer">
         <item>顶级音质</item>
         <item>高音质</item>
@@ -95,6 +96,11 @@
         <item>100％</item>
     </string-array>
     <string-array name="cure_crossfeed">
+        <item>轻微</item>
+        <item>中等</item>
+        <item>极端</item>
+    </string-array>
+    <string-array name="analogx_mode">
         <item>轻微</item>
         <item>中等</item>
         <item>极端</item>
@@ -267,4 +273,5 @@
         <item>14.0 分贝</item>
         <item>14.8 分贝</item>
     </string-array>
+
 </resources>

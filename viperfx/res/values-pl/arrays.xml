@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="drvinst_prefer">
         <item>B. wysoka jakość dźwięku</item>
         <item>Wysoka jakość dźwięku</item>
@@ -282,4 +283,5 @@
         <item>7000 Hz</item>
         <item>8000 Hz</item>
     </string-array>
+
 </resources>

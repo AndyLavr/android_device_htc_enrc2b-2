@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">ViPER FX</string>
     <string name="select_configuration_title">ViPER4Android</string>
     <string name="headset_title">НАВУШНИКИ</string>
     <string name="speaker_title">ДИНАМИК</string>
     <string name="bluetooth_title">BLUETOOTH</string>
     <string name="usb_title">USB</string>
-    <string name="audio_effects">аудіоефектів</string>
-    <string name="dsp_settings_headset">Налаштування ефектів - Навушники</string>
-    <string name="dsp_settings_speaker">Налаштування ефектів - Динамік</string>
-    <string name="dsp_settings_bluetooth">Налаштування ефектів - Bluetooth</string>
-    <string name="dsp_settings_usb">Налаштування ефектів - USB</string>
+    <string name="audio_effects">Аудіоефекти</string>
+    <string name="dsp_settings_headset">Налаштування ефектів — Навушники</string>
+    <string name="dsp_settings_speaker">Налаштування ефектів — Динамік</string>
+    <string name="dsp_settings_bluetooth">Налаштування ефектів — Bluetooth</string>
+    <string name="dsp_settings_usb">Налаштування ефектів — USB</string>
     <string name="pref_dsp_enable">Включити</string>
     <string name="pref_effect_title">Рівень</string>
     <string name="dialog_effect">Рівень</string>
     <string name="pref_force_enable_text">Примусово</string>
-    <string name="pref_force_enable_warn">"Примусове включення ViPER може вирішити проблему з неактивними ефектами.
-Але на деяких прошивках можливі відсутність звуку/швидкий розряд батареї.
-Використовуйте на свій розсуд. Якщо описане вище відбудеться, відключіть цю опцію. "</string>
+    <string name="pref_force_enable_warn">Примусове включення ViPER може вирішити проблему з неактивними ефектами. 
+\nАле на деяких прошивках можливі відсутність звуку/швидкий розряд батареї. 
+\nВикористовуйте на свій розсуд. Якщо описане вище відбудеться, вимкніть цю опцію.</string>
     <string name="pref_fx_master_title">Всі ефекти</string>
     <string name="pref_fx_master_summary_on">ViPER FX включений</string>
     <string name="pref_fx_master_summary_off">ViPER FX відключений</string>
@@ -30,14 +31,14 @@
     <string name="pref_spkfx_limiter_threshold">Лімітер</string>
     <string name="pref_output_gain">Посилення</string>
     <string name="pref_output_pan">Баланс</string>
-    <string name="pref_playback_title">Авторегулировка посилення</string>
-    <string name="pref_playback_summary_on">АРУ включена</string>
-    <string name="pref_playback_summary_off">АРУ відключена</string>
+    <string name="pref_playback_title">Авторегулювання підсилення</string>
+    <string name="pref_playback_summary_on">АРП включена</string>
+    <string name="pref_playback_summary_off">АРП відключена</string>
     <string name="pref_playback_output_threshold">Поріг</string>
     <string name="pref_playback_maxgain">Межа</string>
-    <string name="pref_xloud_title">Супергромкость</string>
-    <string name="pref_xloud_summary_on">Супергромкость включена</string>
-    <string name="pref_xloud_summary_off">Супергромкость відключена</string>
+    <string name="pref_xloud_title">Супергучність</string>
+    <string name="pref_xloud_summary_on">Супергучність включена</string>
+    <string name="pref_xloud_summary_off">Супергучність відключена</string>
     <string name="pref_xloud_output_amplifer">Посилення</string>
     <string name="pref_xloud_spk_lowfreq">НЧ</string>
     <string name="pref_xloud_spk_highfreq">ВЧ</string>
@@ -51,25 +52,31 @@
     <string name="pref_viperddc_device">Навушники</string>
     <string name="pref_viperddc_device_manufacturer">Виробник</string>
     <string name="pref_viperddc_device_model">Модель</string>
-    <string name="pref_viperddc_tips">"УВАГА:
-Цифрова корекція - корекція під певну модель навушників.
-Підтримується більше 500 моделей, дані будуть доповнюватися.
-Якщо Ви не змогли знайти свої навушники в списку відмінить цю функцію. "</string>
+    <string name="pref_viperddc_tips">УВАГА:
+\nЦифрова корекція — корекція під певну модель навушників.
+\nПідтримується більше 500 моделей, дані будуть доповнюватися.
+\nЯкщо Ви не змогли знайти свої навушники в списку, вимкніть цю функцію.</string>
     <string name="pref_vse_title">Розширення спектру</string>
     <string name="pref_vse_summary_on">Розширення спектру включено</string>
     <string name="pref_vse_summary_off">Розширення спектру відключено</string>
     <string name="pref_vse_enable">Розширення спектру</string>
     <string name="pref_vse_strength">Рівень</string>
     <string name="pref_vse_strength_title">Рівень</string>
-    <string name="pref_vse_tips">"УВАГА:
-\"Розширення спектру\" - розширення потеряной при стисненні спектра.
-При відтворенні форматів з втратами (MP3, AAC, OGG) звук може бути наближений до звуку форматів без втрат.
-При відтворенні незжатих форматів відключіть цю функцію. "</string>
+    <string name="pref_vse_tips">УВАГА:
+\n\"Розширення спектру\" — розширення втраченого при стисненні спектру.
+\nПри відтворенні форматів з втратами (MP3, AAC, OGG) звук може бути наближений до звуку форматів без втрат.
+\nПри відтворенні нестислих форматів відключіть цю функцію.</string>
+    <string name="pref_analogx_title">АналогX</string>
+    <string name="pref_analogx_enable">Включити</string>
+    <string name="pref_analogx_summary_on">АналогX включений</string>
+    <string name="pref_analogx_summary_off">АналогX відключений</string>
+    <string name="pref_analogx_strength">Посилення</string>
+    <string name="pref_analogx_strength_title">Рівень посилення</string>
     <string name="pref_equalizer_title">Еквалайзер</string>
     <string name="pref_equalizer_summary_on">Еквалайзер включений</string>
     <string name="pref_equalizer_summary_off">Еквалайзер відключений</string>
     <string name="pref_equalizer_enable">Еквалайзер</string>
-    <string name="pref_equalizer_preset_title">Розумні</string>
+    <string name="pref_equalizer_preset_title">Передустановки</string>
     <string name="pref_dynamicsystem_title">Динамічна обробка</string>
     <string name="pref_dynamicsystem_summary_on">Динамічна обробка включена</string>
     <string name="pref_dynamicsystem_summary_off">Динамічна обробка відключена</string>
@@ -101,7 +108,7 @@
     <string name="pref_curesystem_summary_on">Кроссфідер включений</string>
     <string name="pref_curesystem_summary_off">Кроссфідер відключений</string>
     <string name="pref_curesystem_enable">Включити</string>
-    <string name="pref_select_cure_cf_title">Бінауральной рівень</string>
+    <string name="pref_select_cure_cf_title">Бінауральний рівень</string>
     <string name="dialog_cure_crossfeed">Рівень</string>
     <string name="pref_convolver_title">Конвольвер</string>
     <string name="pref_convolver_summary_on">Конвольвер включений</string>
@@ -153,7 +160,7 @@
     <string name="eq_preset_treble_reducer">Послабити ВЧ</string>
     <string name="eq_preset_vocal_booster">Посилити вокал</string>
     <string name="eq_preset_custom">Вручну</string>
-    <string name="text_ir_dir_isempty">ViPER4Android: папка імпульсів% 1 $ s порожня.</string>
+    <string name="text_ir_dir_isempty">ViPER4Android: папка імпульсів %1$s порожня.</string>
     <string name="text_token_lost">ViPER4Android: одна з програм виконала запит на відключення аудіоефектів, V4A буде тимчасово відключений.</string>
     <string name="text_enabled">Включено</string>
     <string name="text_disabled">Відключено</string>
@@ -171,73 +178,75 @@
     <string name="text_supported">Сумісний</string>
     <string name="text_unsupported">Несумісний</string>
     <string name="text_loadfxprofile">Завантажити профіль</string>
-    <string name="text_newfxprofile">Новий профіль ...</string>
+    <string name="text_newfxprofile">Новий профіль…</string>
     <string name="text_savefxprofile">Зберегти профіль</string>
     <string name="text_profilesaved_overwrite">Профіль з таким ім\'ям існує, перезаписати?</string>
     <string name="text_profileload_tip">Завантаження профілю</string>
     <string name="text_ok">OK</string>
     <string name="text_cancel">Скасування</string>
     <string name="text_drvinst_prefer">Вибір драйвера</string>
-    <string name="text_drvinst_sqdrv">"Для Високої якості ефектів рекомендується двоядерний процесор, можливий швидкий розряд батареї.
-Продовжити? "</string>
-    <string name="text_drvvernotmatch">"Для роботи ViPER4Android необхідна установка/оновлення драйвера.
-Виконати зараз? "</string>
+    <string name="text_drvinst_sqdrv">Для Високої якості ефектів рекомендується двоядерний процесор, можливий швидкий розряд батареї. 
+\nПродовжити?</string>
+    <string name="text_drvvernotmatch">Для роботи ViPER4Android необхідне оновлення драйвера!</string>
     <string name="text_drvuninst_confim">Видалити драйвер ViPER4Android?</string>
     <string name="text_uiprefer">Інтерфейс</string>
     <string name="text_uiprefer_dialog">Рівень</string>
     <string name="text_commode">Сумісність</string>
-    <string name="text_drv_blank" />
+    <string name="text_drv_blank"></string>
     <string name="text_install">Встановити драйвер</string>
     <string name="text_drvinst_ok">Драйвер встановлений. Перезавантажте пристрій.</string>
-    <string name="text_drvuninst_ok">Драйвер видалений. Перезавантажте пристрій.</string>
+    <string name="text_drvuninst_ok">Драйвер видалено. Перезавантажте пристрій.</string>
     <string name="text_no_busybox">BusyBox не знайдений, встановити зараз?</string>
     <string name="text_drvinst_acquireroot">Драйвер не встановлений. Не вдалося отримати права root, переконайтеся в наявності root-доступу до пристрою.</string>
-    <string name="text_drvinst_busybox_not_installed">Драйвер не встановлений, оскільки підходяща версія BusyBox не знайдена.</string>
-    <string name="text_drvinst_sdnotmounted">Драйвер не встановлений, тому що зовнішній накопичувач не змонтоване.</string>
-    <string name="text_drvinst_dataioerr">Драйвер не встановлений. Сталася помилка вводу-виводу, переагрузіте пристрій і спробуйте ще раз.</string>
-    <string name="text_drvinst_cfg_unsup">Драйвер не встановлений. Непідтримувана система Android або ROM.</string>
+    <string name="text_drvinst_busybox_not_installed">Драйвер не встановлений, так як відповідна версія BusyBox не знайдено.</string>
+    <string name="text_drvinst_sdnotmounted">Драйвер не встановлений, так як зовнішній накопичувач не змонтований.</string>
+    <string name="text_drvinst_dataioerr">Драйвер не встановлений. Сталася помилка вводу-виводу, переагрузите пристрій і спробуйте ще раз.</string>
+    <string name="text_drvinst_cfg_unsup">Драйвер не встановлений. Операція не підтримується система Android або ROM.</string>
     <string name="text_drvinst_failed">Драйвер не встановлений. Перевірте наявність root-прав і BusyBox.</string>
-    <string name="text_modifybuildprop">"УВАГА:
-на цьому пристрої увімкнено LPA, що може викликати збої в роботі V4A.
-LPA означає\"Low Power Audio\", її можна відключити за допомогою зміни build.prop, процес буде виконаний автоматично.
-Настійно рекомендується зробити NANDROID BACKUP або DATA BACKUP перед виконанням!
-Відключити LPA зараз? "</string>
+    <string name="text_modifybuildprop">УВАГА:
+\nна цьому пристрої активовано функцію LPA, що може викликати збої в роботі V4A.
+\nLPA означає \"Low Power Audio\", її можна відключити за допомогою зміни build.prop, процес буде виконано автоматично.
+\nНастійно рекомендується зробити NANDROID BACKUP або DATA BACKUP перед виконанням! 
+\nВідключити LPA зараз?</string>
     <string name="text_changelog">Що нового</string>
     <string name="text_drv_status">Стан драйвера</string>
-    <string name="text_drv_status_view">"
- 
-Драйвер: %1$s 
-NEON включений: %2$s 
-ViPER включений: %3$s 
-Стан: %4$s 
-Аудіоформат: %5$s 
-Обробка: %6$s 
-Дискретизація: %7$d Гц 
-"</string>
-    <string name="text_service_error">Не вдається запустити ViPER4Android.</string>
+    <string name="text_drv_status_view">\n
+\nДрайвер: %1$s
+\nNEON включён: %2$s
+\nViPER включён: %3$s
+\nСтан: %4$s
+\nАудіо: %5$s
+\nОбробка: %6$s
+\nДискретизація: %7$d Гц
+\n</string>
+    <string name="text_service_error">Не вдалося запустити ViPER4Android.</string>
     <string name="about_title">Допомога</string>
-    <string name="about_text">"*** Про ViPER4Android ***
- 
-\"libv4a_xx_xx.so\" - драйвер ViPER4Android.
-© 2006-2016, ViPER ACOUSTIC. Всі права захищені.
-Комерційне використання без офіційного дозволу заборонено.
-Офіційний форум: forum.vipersaudio.com
- 
-\"ViPER4Android.apk\" - панель управління ViPER4Android.
-Містить код DSPManager для CyanogenMod.
- 
-Велике спасибі Zhuhang @ XDA
- 
-Велике спасибі M4570D0N @ github, xLaMbChOpSx @ github, bboa @ github (співтовариство @ 4pda)
- 
-Версія% 1 $ s (FX) "Beautiful".
-"</string>
-    <string name="text_help_content">"*** Коротка довідка ***
- 
-\"Сумісність\" - встановити режим сумісності.
- \"Ні\" - зробити ViPER4Android глобальним ефектом.
- \"Включити\" - зробити ViPER4Android локальним ефектом.
- 
+    <string name="about_text">***Про ViPER4Android***
+\n
+\n© 2006—2016, ViPER ACOUSTIC. Всі права захищені.
+\nКомерційне використання без офіційного дозволу заборонено.
+\nОфіційний форум: forum.vipersaudio.com
+\n
+\n\"ViPER4Android\" — панель управління ViPER4Android. 
+\nМістить код DSPManager для CyanogenMod.
+\n
+\nДякуем Zhuhang@XDA
+\n
+\nДякуем M4570D0N@github, xLaMbChOpSx@github, bboa@github (співтовариство@4pda)
+\n
+\nВерсія %1$s (FX) &#8220;Beautiful&#8221;.
+\n
+</string>
+    <string name="text_help_content">***Коротка довідка***
+\n
+\n\"Встановити драйвер\" — встановити/оновити драйвер ефектів ViPER4Android.
+\n
+\n\"Видалити драйвер\" — видалити драйвер ефектів ViPER4Android.
+\n
+\n\"Сумісність\" — установить режим совместимости.
+\n    \"Немає\" — зробити ViPER4Android глобальним ефектом.
+\n    \"Включити\" — зробити ViPER4Android локальним ефектом.
+\n
  
 ***Питання та відповіді***
  
@@ -342,7 +351,7 @@ ViPER включений: %3$s
  
 11.2\"Рівень НЧ\". Значення визначає усереднений рівень низьких частот, більше значення збільшує їх інтенсивність. Рекомендується\"33 відсотка\".
  
-11.3 Симуляція лампи - модель\"6N1J\". Ця настройка відповідає за включення симуляції звучання лампи. V4A використовує спрощену математичну модель симуляції лампового звуку. При включенні ефекту до звуку додається велика кількість випадкових високочастотних гармонійних спотворень і збільшується кількість непарних гармонік.
+11.3 Симуляція лампи - модель\"6N1J\". Це налаштування відповідає за включення симуляції звучання лампи. V4A використовує спрощену математичну модель симуляції лампового звуку. При включенні ефекту до звуку додається велика кількість випадкових високочастотних гармонійних спотворень і збільшується кількість непарних гармонік.
  
 12. Управління достовірністю звучання -\"Реставрація звуку\". Замінює технологію Відновлення Звуку XHiFi. Управляє низами -\"Реставрація НЧ\", а також верхами -\"Реставрація ВЧ\".
  
