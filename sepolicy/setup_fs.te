@@ -1,0 +1,13 @@
+type setup_fs, domain;
+type setup_fs_exec, exec_type, file_type;
+
+init_daemon_domain(setup_fs)
+
+allow setup_fs userdata_block_device:blk_file rw_file_perms;
+allow setup_fs cache_block_device:blk_file rw_file_perms;
+allow setup_fs block_device:dir search;
+
+# Only allow entry from init
+neverallow { domain -init } setup_fs:process transition;
+neverallow domain setup_fs:process dyntransition;
+neverallow setup_fs { file_type fs_type -setup_fs_exec }:file entrypoint;

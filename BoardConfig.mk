@@ -97,11 +97,14 @@ BOARD_SEPOLICY_UNION += \
     property_contexts \
     service_contexts \
     adbd.te \
+    cand.te \
     drmserver.te \
     debuggerd.te \
     bluetooth.te \
     drmserver.te \
     gpsd.te \
+    gsm0710mux.te \
+    google.te \
     hdmid.te \
     healthd.te \
     init.te \
@@ -117,6 +120,7 @@ BOARD_SEPOLICY_UNION += \
     vold.te \
     hostapd.te \
     sensors_config.te \
+    setup_fs.te \
     shell.te \
     surfaceflinger.te \
     system_app.te \

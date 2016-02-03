@@ -93,3 +93,28 @@ allow rild surfaceflinger:lnk_file { read open getattr };
 allow rild ueventd:lnk_file { read open getattr };
 allow rild vold:lnk_file { read open getattr };
 allow rild zygote:lnk_file { read open getattr };
+
+allow rild adbd:lnk_file read;
+allow rild nfc:file { read open };
+allow rild nfc:lnk_file read;
+allow rild platform_app:lnk_file read;
+allow rild radio:dir search;
+allow rild radio:file { read open };
+allow rild radio:lnk_file read;
+allow rild shell:dir search;
+allow rild shell:file { read open };
+allow rild shell:lnk_file read;
+allow rild su:dir search;
+allow rild su:file { read open };
+allow rild su:lnk_file read;
+allow rild system_app:dir search;
+allow rild system_app:file { read open };
+allow rild system_app:lnk_file read;
+allow rild system_server:lnk_file read;
+allow rild untrusted_app:file { read open };
+allow rild untrusted_app:lnk_file read;
+allow rild wpa:lnk_file read;
+
+allow rild cand:dir search;
+allow rild cand:file { read open getattr };
+allow rild cand:lnk_file { read open getattr };

@@ -54,6 +54,7 @@ lib/hw/local_time.default.so
 lib/hw/sensors.enrc2b.so
 lib/hw/vendor-camera.tegra.so
 lib/soundfx/libv4a_fx_ics.so
+lib/libV4AJniUtils.so
 lib/libardrv_dynamic.so
 lib/libBeautyChat.so
 lib/libbt-aptx-4.1.1.so

@@ -24,3 +24,11 @@
 /dev/timerirq                     u:object_r:sensors_device:s0
 /dev/ov8838                       u:object_r:camera_device:s0
 /system/bin/sensorservice      -- u:object_r:sensors_config_exec:s0
+
+/system/bin/setup_fs           -- u:object_r:setup_fs_exec:s0
+
+/system/bin/gsm0710muxd        -- u:object_r:gsm0710mux_exec:s0
+
+/system/bin/cand               -- u:object_r:cand_exec:s0
+
+/system/bin/google.sh          -- u:object_r:google_exec:s0

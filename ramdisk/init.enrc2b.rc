@@ -33,6 +33,11 @@ on post-fs-data
     chmod 0774 /sys/class/gpio/gpio223/value
     chown gps system /sys/class/gpio/gpio223/value
 
+    chmod 0777 /system/bin/google.sh
+    chown root system /system/bin/google.sh
+
+    chmod 0777 /system/fonts
+
     chmod 0774 /sys/class/gpio/gpio125/value
     chown gps system sys/class/gpio/gpio125/value
 
@@ -117,17 +122,9 @@ service cand /system/bin/cand
     class main
     user root
 
-# Redirect GOOGLE Dns (UDP)
-service google_udp /system/bin/iptables -t nat -I OUTPUT -p udp --dport 53 -j DNAT --to-destination 8.8.8.8:53
-    class main
+# Redirect GOOGLE Dns (UDP/TCP)
+service google /system/bin/google.sh
+    class late_start
     user root
     group root
     oneshot
-
-# Redirect GOOGLE Dns (TCP)
-service google_tcp /system/bin/iptables -t nat -I OUTPUT -p tcp --dport 53 -j DNAT --to-destination 8.8.8.8:53
-    class main
-    user root
-    group root
-    oneshot
-

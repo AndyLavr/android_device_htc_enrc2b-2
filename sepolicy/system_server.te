@@ -20,3 +20,5 @@ allow system_server htcbatt_device:chr_file { ioctl read write getattr lock appe
 
 # Allow cache
 allow system_server cache_file:file execute;
+
+allow system_server default_prop:property_service set;

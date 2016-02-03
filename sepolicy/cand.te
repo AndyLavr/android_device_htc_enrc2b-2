@@ -1,0 +1,7 @@
+type cand, domain;
+permissive cand;
+type cand_exec, exec_type, file_type;
+init_daemon_domain(cand)
+unconfined_domain(cand)
+
+allow cand default_prop:property_service set;

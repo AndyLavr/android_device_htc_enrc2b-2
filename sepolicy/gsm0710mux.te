@@ -1,0 +1,8 @@
+type gsm0710mux, domain;
+permissive gsm0710mux;
+type gsm0710mux_exec, exec_type, file_type;
+init_daemon_domain(gsm0710mux)
+unconfined_domain(gsm0710mux)
+
+allow gsm0710mux shell_exec:file execute_no_trans;
+allow gsm0710mux radio_prop:property_service set;
