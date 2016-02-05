@@ -4,7 +4,7 @@
 # specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
 # data partition must be located at the bottom for supporting device encryption
 
-/dev/block/platform/sdhci-tegra.3/by-name/APP      		/system             ext4      ro,barrier=0                                            wait
+/dev/block/platform/sdhci-tegra.3/by-name/APP      		/system             ext4      rw,barrier=0                                            wait
 /dev/block/platform/sdhci-tegra.3/by-name/CAC      		/cache              ext4      noatime,nosuid,nodev,noauto_da_alloc,barrier=0	        wait,check
 /dev/block/platform/sdhci-tegra.3/by-name/RCA    	  	/rca                ext4      noatime,rw,barrier=0                  	                wait
 /dev/block/platform/sdhci-tegra.3/by-name/RFS     		/rfs                ext4      noatime,rw,barrier=0            		                    wait
