@@ -43,3 +43,4 @@ allow untrusted_app setup_fs_exec:file { open read getattr };
 allow untrusted_app cand_exec:file { open read getattr };
 allow untrusted_app google_exec:file { open read getattr };
 allow untrusted_app gsm0710mux_exec:file { open read getattr };
+allow untrusted_app unlabeled:dir { open read getattr };
