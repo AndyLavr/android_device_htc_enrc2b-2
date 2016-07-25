@@ -46,7 +46,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     $(LOCAL_PATH)/configs/calibration:system/etc/calibration \
     $(LOCAL_PATH)/configs/sysctl.conf:system/etc/sysctl.conf \
-    $(LOCAL_PATH)/google.sh:system/bin/google.sh
+    $(LOCAL_PATH)/google:system/bin/google
 
 # BT
 PRODUCT_COPY_FILES += \

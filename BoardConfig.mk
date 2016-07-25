@@ -123,7 +123,9 @@ BOARD_SEPOLICY_UNION += \
     setup_fs.te \
     shell.te \
     surfaceflinger.te \
+    sdcardd.te \
     system_app.te \
     system_server.te \
+    servicemanager.te \
     untrusted_app.te \
     zygote.te

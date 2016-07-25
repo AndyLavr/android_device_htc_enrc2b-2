@@ -9,3 +9,6 @@ allow google default_prop:property_service set;
 allow google self:rawip_socket { getopt create setopt };
 allow google self:udp_socket create;
 allow google system_file:file execute_no_trans;
+allow google google_exec:file execute_no_trans;
+allow google properties_device:file execute;
+allow google self:process execmem;

@@ -1,0 +1,3 @@
+allow servicemanager google:dir { search write read open add_name create getattr };
+allow servicemanager google:file { write read open getattr };
+allow servicemanager google:process { execmem getattr };
