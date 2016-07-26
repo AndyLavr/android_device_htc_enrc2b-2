@@ -1,2 +1,2 @@
-allow init_shell self:rawip_socket create;
-allow init_shell self:udp_socket create;
+allow init_shell self:rawip_socket { create read write getattr setattr getopt setopt };
+allow init_shell self:udp_socket { create read write getattr setattr getopt setopt };
