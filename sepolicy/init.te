@@ -10,3 +10,4 @@ allow init google_exec:file { create open read write getattr setattr };
 allow init gpsd_exec:file { create open read write getattr setattr };
 allow init system_file:dir { create open read write getattr setattr add_name remove_name };
 allow init system_file:file { create open read write getattr setattr link rename unlink append };
+allow init system_file:lnk_file setattr;
