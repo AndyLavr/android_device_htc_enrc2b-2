@@ -5,7 +5,6 @@
 /sys/devices/platform/bcm4330_rfkill/rfkill/rfkill0/type    --  u:object_r:sysfs_bluetooth_writable:s0
 
 #Gps
-/system/bin/glgps                 u:object_r:gpsd_exec:s0
 /dev/socket/rild-agps             u:object_r:gps_socket:s0
 /dev/ttyHS4                       u:object_r:gps_device:s0
 
@@ -24,6 +23,16 @@
 /dev/timerirq                     u:object_r:sensors_device:s0
 /dev/ov8838                       u:object_r:camera_device:s0
 /system/bin/sensorservice      -- u:object_r:sensors_config_exec:s0
+
+/sys/class/gpio/gpio162/value      u:object_r:sysfs_firmware_writable:s0
+/sys/class/gpio/gpio162/direction      u:object_r:sysfs_firmware_writable:s0
+
+/dev/block/mmcblk0                 u:object_r:root_block_device:s0
+/dev/block/platform/sdhci-tegra.3/by-name/UDA     u:object_r:userdata_block_device:s0
+/dev/block/platform/sdhci-tegra.3/by-name/CAC     u:object_r:cache_block_device:s0
+/dev/block/zram0     u:object_r:swap_block_device:s0
+
+/system/bin/gps_daemon.sh        u:object_r:glgps_exec:s0
 
 /system/bin/setup_fs           -- u:object_r:setup_fs_exec:s0
 

@@ -52,7 +52,7 @@ BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 
 # Building stagefright plugins 
-TARGET_USES_STAGEFRIGHT_PLUGINS := true
+#TARGET_USES_STAGEFRIGHT_PLUGINS := true
 
 # Try to build the kernel
 TARGET_KERNEL_SOURCE := kernel/htc/enrc2b
@@ -94,42 +94,3 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 # Device specific SELinux policies
 BOARD_SEPOLICY_DIRS += \
 		device/htc/enrc2b/sepolicy
-
-BOARD_SEPOLICY_UNION += \
-    file_contexts \
-    property_contexts \
-    service_contexts \
-    adbd.te \
-    cand.te \
-    drmserver.te \
-    debuggerd.te \
-    bluetooth.te \
-    drmserver.te \
-    gpsd.te \
-    gsm0710mux.te \
-    google.te \
-    hdmid.te \
-    healthd.te \
-    init.te \
-    init_shell.te \
-    installd.te \
-    kernel.te \
-    lmkd.te \
-    mediaserver.te \
-    property.te \
-    radio.te \
-    recovery.te \
-    netd.te \
-    rild.te \
-    vold.te \
-    hostapd.te \
-    sensors_config.te \
-    setup_fs.te \
-    shell.te \
-    surfaceflinger.te \
-    sdcardd.te \
-    system_app.te \
-    system_server.te \
-    servicemanager.te \
-    untrusted_app.te \
-    zygote.te
