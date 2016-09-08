@@ -51,6 +51,9 @@ BOARD_KERNEL_CMDLINE :=
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
 
+# Building stagefright plugins 
+TARGET_USES_STAGEFRIGHT_PLUGINS := true
+
 # Try to build the kernel
 TARGET_KERNEL_SOURCE := kernel/htc/enrc2b
 TARGET_KERNEL_CONFIG := cm_enrc2b_defconfig
