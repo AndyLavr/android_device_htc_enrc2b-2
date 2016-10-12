@@ -1,1 +1,2 @@
 allow netd self:capability fsetid;
+allow netd unlabeled:file { open read write getattr setattr link rename unlink append };

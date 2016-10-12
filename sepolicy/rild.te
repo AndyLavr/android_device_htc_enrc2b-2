@@ -23,6 +23,7 @@ allow rild self:capability sys_ptrace;
 allow rild adbd:dir search;
 allow rild debuggerd:dir search;
 allow rild dhcp:dir search;
+allow rild dhcp:file read;
 allow rild drmserver:dir search;
 allow rild gpsd:dir search;
 allow rild hdmid:dir search;
