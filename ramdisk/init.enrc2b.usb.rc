@@ -12,155 +12,206 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+on init
+# Workarunod for USB unknow device issue
+# USB would switch correct function when set properity sys.usb.config
+    setprop sys.usb.vid 0bb4
+    write /sys/class/android_usb/android0/iSerial $ro.serialno
+    write /sys/class/android_usb/android0/f_rndis/manufacturer HTC
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
+    write /sys/class/android_usb/android0/f_rndis/wceis 1
+
+on post-fs-data
+    chown system system /sys/class/android_usb/android0/f_mass_storage/lun0/file
+    chmod 0660 /sys/class/android_usb/android0/f_mass_storage/lun0/file
+    chown system system /sys/class/android_usb/android0/f_rndis/ethaddr
+    chmod 0660 /sys/class/android_usb/android0/f_rndis/ethaddr
+
+on boot
+    write /sys/class/android_usb/android0/iManufacturer $ro.product.manufacturer
+    write /sys/class/android_usb/android0/iProduct OneX+
+
 on property:sys.usb.config=mass_storage,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 3
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage
     write /sys/devices/platform/android_usb/usb_function_switch 1
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 11
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag
     write /sys/devices/platform/android_usb/usb_function_switch 9
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2059
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2057
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,modem,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6411
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,modem,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 6409
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,modem,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4363
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,modem,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 4361
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=diag,modem,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 6408
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=diag,modem,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 4360
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,modem,modem_mdm,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 22795
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,modem,modem_mdm,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 22793
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis
     write /sys/devices/platform/android_usb/usb_function_switch 4
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,diag
     write /sys/devices/platform/android_usb/usb_function_switch 12
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2060
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 14
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2062
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 135
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,rmnet,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4227
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4225
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp
     write /sys/devices/platform/android_usb/usb_function_switch 133
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=cdc_ethernet
     write /sys/devices/platform/android_usb/usb_function_switch 512
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=cdc_network
 # Add projector
     write /sys/devices/platform/android_usb/usb_function_switch 98304
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=cdc_network,adb
     start adbd
 # Add projector
     write /sys/devices/platform/android_usb/usb_function_switch 98306
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp
     write /sys/devices/platform/android_usb/usb_function_switch 128
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 130
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #PC MODEM::modem+diag+serial+mtp+adb+mass_storage
 on property:sys.usb.config=mtp,modem,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 411
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
     setprop service.modem.enable 1
 
 #PC MODEM::modem+diag+serial+mtp+mass_storage
 on property:sys.usb.config=mtp,modem
     write /sys/devices/platform/android_usb/usb_function_switch 409
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
     setprop service.modem.enable 1
 
@@ -168,12 +219,14 @@ on property:sys.usb.config=mtp,modem
 on property:sys.usb.config=mtp,modem,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 411
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
     setprop service.modem.enable 1
 
 #PC MODEM::modem+diag+serial+mtp+mass_storage
 on property:sys.usb.config=mtp,modem,diag
     write /sys/devices/platform/android_usb/usb_function_switch 409
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
     setprop service.modem.enable 1
 
@@ -182,299 +235,357 @@ on property:sys.usb.config=mtp,modem,diag
 on property:sys.usb.config=mtp,diag,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 139
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 #without adb
 on property:sys.usb.config=mtp,diag
     write /sys/devices/platform/android_usb/usb_function_switch 137
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,projector
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 162
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,projector
     write /sys/devices/platform/android_usb/usb_function_switch 160
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 386
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,modem
     write /sys/devices/platform/android_usb/usb_function_switch 384
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 394
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 392
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem,modem_mdm,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 18826
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem,modem_mdm,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 18824
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem,modem_mdm,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 22922
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem,modem_mdm,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 22920
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6538
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 6536
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6282
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 6280
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4234
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 4232
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4490
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 4488
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=mtp,adb,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2187
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 #without adb
 on property:sys.usb.config=mtp,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2185
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2442
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2440
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 131
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 131
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage
     write /sys/devices/platform/android_usb/usb_function_switch 129
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,mass_storage,adb
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 135
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb,mass_storage
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 135
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage
     write /sys/devices/platform/android_usb/usb_function_switch 133
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 139
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 139
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag
     write /sys/devices/platform/android_usb/usb_function_switch 137
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2187
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2187
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2185
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,modem,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4491
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,modem,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 4491
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,modem,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 4489
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,modem,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6539
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,modem,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 6539
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,modem,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 6537
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,modem,modem_mdm,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 22923
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,modem,modem_mdm,diag_mdm,rmnet
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 22923
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,modem,modem_mdm,diag_mdm,rmnet
     write /sys/devices/platform/android_usb/usb_function_switch 22921
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=mtp,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 139
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=rndis,mtp,adb,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 143
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb & add mass_storage
 on property:sys.usb.config=rndis,mtp,diag
     write /sys/devices/platform/android_usb/usb_function_switch 141
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=rndis,mtp,adb,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 399
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb & add mass_storage
 on property:sys.usb.config=rndis,mtp,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 397
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb,mass_storage,diag
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 143
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage,diag
     write /sys/devices/platform/android_usb/usb_function_switch 141
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=rndis,mtp,adb,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2191
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb & add mass_storage
 on property:sys.usb.config=rndis,mtp,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2189
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=rndis,mtp,adb,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2447
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb & add mass_storage
 on property:sys.usb.config=rndis,mtp,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2445
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb,mass_storage,diag,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2191
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage,diag,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2189
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 
@@ -482,82 +593,98 @@ on property:sys.usb.config=rndis,mtp,mass_storage,diag,diag_mdm
 on property:sys.usb.config=rndis,mtp,adb,mass_storage,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 399
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 397
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb,mass_storage,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2447
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2445
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,mtp,adb,mass_storage,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 391
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,mtp,mass_storage,modem
     write /sys/devices/platform/android_usb/usb_function_switch 389
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #will add mass_storage
 on property:sys.usb.config=rndis,mtp,adb,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 391
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb & add mass_storage
 on property:sys.usb.config=rndis,mtp,modem
     write /sys/devices/platform/android_usb/usb_function_switch 389
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 395
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 395
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 393
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2443
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,mass_storage,adb,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2443
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2441
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp,adb,mass_storage,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 387
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mtp,mass_storage,modem
     write /sys/devices/platform/android_usb/usb_function_switch 385
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 
@@ -565,77 +692,94 @@ on property:sys.usb.config=mtp,mass_storage,modem
 on property:sys.usb.config=mass_storage,adb,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 259
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,modem
     write /sys/devices/platform/android_usb/usb_function_switch 257
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 267
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 265
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mass_storage,adb,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2315
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=mass_storage,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2313
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb,diag,modem,diag_mdm
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 2318
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,diag,modem,diag_mdm
     write /sys/devices/platform/android_usb/usb_function_switch 2316
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb,diag,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 270
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,diag,modem
     write /sys/devices/platform/android_usb/usb_function_switch 268
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,adb,modem
     start adbd
     write /sys/devices/platform/android_usb/usb_function_switch 262
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #without adb
 on property:sys.usb.config=rndis,modem
     write /sys/devices/platform/android_usb/usb_function_switch 260
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.state ${sys.usb.config}
 
 #used for ##3424
 on property:persist.sys.usb.diag.config=*
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.diag.config ${persist.sys.usb.diag.config}
 
 on property:sys.usb.diag.config=diagon
     write /sys/class/android_usb/android0/f_diag/on 1
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.diag.state ${sys.usb.diag.config}
 
 on property:sys.usb.diag.config=diagoff
     write /sys/class/android_usb/android0/f_diag/on 0
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
     setprop sys.usb.diag.state ${sys.usb.diag.config}
 
 on property:sys.usb.projector.enable=1
     write /sys/class/android_usb/f_projector/on 1
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
 
 on property:sys.usb.projector.enable=0
     write /sys/class/android_usb/f_projector/on 0
+    write /sys/class/android_usb/android0/f_rndis/vendorID $sys.usb.vid
