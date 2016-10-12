@@ -1,3 +1,4 @@
+allow untrusted_app kernel:system module_request;
 allow untrusted_app racoon_exec:file { open read getattr };
 allow untrusted_app sdcardd_exec:file { open read getattr };
 allow untrusted_app sensors_config_exec:file { open read getattr };
@@ -39,9 +40,10 @@ allow untrusted_app rild_exec:file { open read getattr };
 allow untrusted_app auditd_log:dir { open read getattr };
 allow untrusted_app camera_data_file:dir { open read getattr };
 allow untrusted_app radio_data_file:dir { open read getattr search };
-allow untrusted_app setup_fs_exec:file { open read getattr };
+allow untrusted_app setupfs_exec:file { open read getattr };
 allow untrusted_app cand_exec:file { open read getattr };
 allow untrusted_app google_exec:file { open read getattr };
 allow untrusted_app gsm0710mux_exec:file { open read getattr };
 allow untrusted_app unlabeled:dir { open read getattr };
+allow untrusted_app unlabeled:file { open read getattr };
 allow untrusted_app device:dir { open read getattr };

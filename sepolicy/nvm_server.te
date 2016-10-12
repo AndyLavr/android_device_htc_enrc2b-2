@@ -1,0 +1,1 @@
+allow nvm_server kernel:system module_request;

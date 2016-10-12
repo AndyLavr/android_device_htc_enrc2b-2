@@ -1,1 +1,4 @@
+allow bootanim kernel:system module_request;
+allow bootanim storage_file:dir { open read search };
 allow bootanim cpuctl_device:dir search;
+allow bootanim storage_file:lnk_file { open read };

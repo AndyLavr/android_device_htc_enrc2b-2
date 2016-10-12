@@ -1,2 +1,3 @@
 allow ueventd sysfs_writable:file { write open };
 allow ueventd app_data_file:file relabelto;
+allow ueventd kernel:system module_request;

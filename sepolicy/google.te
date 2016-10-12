@@ -2,7 +2,6 @@ type google, domain;
 permissive google;
 type google_exec, exec_type, file_type;
 init_daemon_domain(google)
-unconfined_domain(google)
 
 allow google shell_exec:file execute_no_trans;
 allow google default_prop:property_service set;

@@ -1,3 +1,5 @@
 allow kernel app_data_file:file relabelto;
 # Access files in /dev/block/vold
 allow kernel block_device:blk_file rw_file_perms;
+allow kernel self:capability dac_override;
+allow kernel radio_device:chr_file { open read write };

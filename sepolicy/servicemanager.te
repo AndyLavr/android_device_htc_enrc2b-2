@@ -1,6 +1,8 @@
 allow servicemanager google:dir { search write read open add_name create getattr };
 allow servicemanager google:file { write read open getattr };
 allow servicemanager google:process { execmem getattr };
-allow servicemanager init_shell:dir { search write read open add_name create getattr };
-allow servicemanager init_shell:file { write read open getattr };
-allow servicemanager init_shell:process { execmem getattr };
+allow servicemanager kernel:system module_request;
+allow servicemanager shell:dir { search write read open add_name create getattr };
+allow servicemanager shell:file { write read open getattr };
+allow servicemanager shell:process { execmem getattr };
+allow servicemanager init:dir { open read write getattr create add_name setattr search };

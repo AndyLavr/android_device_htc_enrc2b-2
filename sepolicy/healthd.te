@@ -3,3 +3,4 @@ allow healthd device:dir r_dir_perms;
 allow healthd self:capability sys_nice;
 allow healthd self:process setsched;
 allow healthd cpuctl_device:dir search;
+allow healthd kernel:system module_request;

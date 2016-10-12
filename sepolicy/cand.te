@@ -2,6 +2,13 @@ type cand, domain;
 permissive cand;
 type cand_exec, exec_type, file_type;
 init_daemon_domain(cand)
-unconfined_domain(cand)
 
 allow cand default_prop:property_service set;
+
+allow cand kernel:system module_request;
+
+allow cand init:unix_stream_socket connectto;
+allow cand property_socket:sock_file write;
+allow cand self:capability net_admin;
+allow cand self:netlink_kobject_uevent_socket { read bind create setopt };
+

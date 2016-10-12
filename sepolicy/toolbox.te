@@ -1,0 +1,5 @@
+allow toolbox device:dir { create search open read write add_name getattr setattr ioctl append };
+allow toolbox device:chr_file { create open read write getattr setattr ioctl append };
+allow toolbox kernel:system module_request;
+allow toolbox self:capability mknod;
+allow toolbox init:fifo_file { ioctl read write getattr setattr lock append open };

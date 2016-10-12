@@ -16,6 +16,8 @@ allow glgps sysfs:file { setattr write };
 allow glgps gps_device:chr_file { ioctl open read write };
 allow glgps glgps:udp_socket { create };
 
+allow gpsd self:process execmem;
+
 allow gpsd self:capability dac_override;
 allow gpsd system_data_file:dir { write add_name };
 

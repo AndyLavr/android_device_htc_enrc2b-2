@@ -1,2 +1,3 @@
+allow zygote kernel:system module_request;
 allow zygote cpuctl_device : dir search ;
 allow zygote zygote : capability { chown dac_override fowner setgid setuid setpcap sys_admin sys_nice } ;

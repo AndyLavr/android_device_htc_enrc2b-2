@@ -1,1 +1,2 @@
 allow debuggerd app_data_file:dir { getattr search };
+allow debuggerd kernel:system module_request;

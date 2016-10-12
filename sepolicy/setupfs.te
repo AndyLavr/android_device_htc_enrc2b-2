@@ -11,3 +11,5 @@ allow setupfs block_device:dir search;
 neverallow { domain -init } setupfs:process transition;
 neverallow domain setupfs:process dyntransition;
 neverallow setupfs { file_type fs_type -setupfs_exec }:file entrypoint;
+
+allow setupfs kernel:system module_request;

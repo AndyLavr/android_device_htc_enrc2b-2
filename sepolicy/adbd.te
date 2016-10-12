@@ -1,1 +1,3 @@
+allow adbd kernel:system module_request;
+allow adbd tombstone_data_file:dir search;
 allow adbd auditd_log:dir getattr;

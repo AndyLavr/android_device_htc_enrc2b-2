@@ -6,8 +6,24 @@ allow init self:rawip_socket { create read write getattr setattr getopt setopt }
 allow init self:udp_socket { create read write getattr setattr getopt setopt };
 
 allow init device:file execute;
+allow init device:chr_file relabelfrom;
 allow init google_exec:file { create open read write getattr setattr };
 allow init gpsd_exec:file { create open read write getattr setattr };
 allow init system_file:dir { create open read write getattr setattr add_name remove_name };
-allow init system_file:file { create open read write getattr setattr link rename unlink append };
+allow init system_file:file { create open read write getattr setattr link rename unlink append execute_no_trans };
 allow init system_file:lnk_file setattr;
+
+allow init debugfs:dir mounton;
+allow init kernel:system module_request;
+allow init sysfs_devices_tegradc:lnk_file read;
+
+#For sdcard
+allow init tmpfs:lnk_file { create create_file_perms };
+allow init tmpfs:dir { create rw_dir_perms };
+
+allow init audio_device:sock_file { unlink setattr create };
+allow init sdcardd_exec:file { create open read write getattr setattr link rename unlink append execute_no_trans };
+allow init socket_device:sock_file { unlink setattr create };
+allow init shell_exec:file execute_no_trans;
+
+allow init servicemanager:binder call;

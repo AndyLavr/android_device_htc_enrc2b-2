@@ -1,1 +1,2 @@
 allow drmserver cpuctl_device : dir search ;
+allow drmserver kernel:system module_request;
