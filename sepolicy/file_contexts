@@ -32,3 +32,6 @@
 /system/bin/cand               -- u:object_r:cand_exec:s0
 
 /system/bin/google.sh          -- u:object_r:google_exec:s0
+
+# ZRAM
+/dev/block/zram0                  u:object_r:ram_device:s0
