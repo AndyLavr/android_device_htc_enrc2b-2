@@ -38,6 +38,7 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR ?= device/htc/enrc2b/bluetooth
 TARGET_PROVIDES_LIBRIL := device/htc/enrc2b/proprietary/lib/libhtc-ril.so
 
 # Kernel / Ramdisk
+# BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_BOOTIMAGE_PARTITION_SIZE := 8388608
@@ -45,6 +46,13 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 8388608
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1610612736
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 60129542144
 BOARD_FLASH_BLOCK_SIZE := 131072
+
+# Skip droiddoc build to save build time
+BOARD_SKIP_ANDROID_DOC_BUILD := true
+DISABLE_DROIDDOC := true
+
+#Stop some stupid logging
+# COMMON_GLOBAL_CFLAGS += -DSTOP_LOG_SPAM
 
 # Boot/Recovery image settings
 BOARD_KERNEL_CMDLINE :=
@@ -58,8 +66,13 @@ BOARD_KERNEL_PAGESIZE := 2048
 TARGET_KERNEL_SOURCE := kernel/htc/enrc2b
 TARGET_KERNEL_CONFIG := cm_enrc2b_defconfig
 
-# dont build docs
-DISABLE_DROIDDOC := true
+# Marshmallow
+# TARGET_NEEDS_TEXT_RELOCS_SUPPORT := true
+# COMMON_GLOBAL_CFLAGS += -DDISABLE_ASHMEM_TRACKING
+# TARGET_REQUIRES_SYNCHRONOUS_SETSURFACE := true
+
+# Enable Minikin text layout engine (will be the default soon)
+# USE_MINIKIN := true
 
 # Charge mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/htc_lpm/lpm_mode
@@ -94,3 +107,4 @@ TARGET_RUNNING_WITHOUT_SYNC_FRAMEWORK := true
 # Device specific SELinux policies
 BOARD_SEPOLICY_DIRS += \
 		device/htc/enrc2b/sepolicy
+

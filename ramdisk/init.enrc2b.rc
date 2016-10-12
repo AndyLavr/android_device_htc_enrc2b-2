@@ -17,9 +17,6 @@
 import init.tegra3-common.rc
 import init.enrc2b.usb.rc
 
-on fs
-    mount_all /fstab.enrc2b
-
 on post-fs-data
     # GPS
     mkdir /data/gps
@@ -51,6 +48,13 @@ on post-fs-data
 
 on boot
     insmod /system/lib/modules/bcmdhd.ko
+
+# ZRAM
+# Start ZRAM manually when the system has completed booting up
+# because active ZRAM slows down app optimization significantly.
+    write /proc/sys/vm/page-cluster 0
+    exec /system/bin/mkswap /dev/block/zram0
+    swapon_all /fstab.enrc2b
 
     service wpa_supplicant /system/bin/wpa_supplicant \
     -iwlan0 -Dnl80211 \
@@ -105,6 +109,12 @@ service iprenew_bnep0 /system/bin/dhcpcd -n
     disabled
     oneshot
 
+service_redefine keystore /system/bin/keystore /data/misc/keystore
+    class main
+    user keystore
+    group keystore drmrpc system
+    setenv LD_SHIM_LIBS /system/libbinder.so|libshim_crypto.so:/system/lib/hw/keystore.default.so|libshim_crypto.so
+
 service hostapd_bin /system/bin/hostapd -d /data/misc/wifi/hostapd.conf
     class main
     socket wpa_wlan0 dgram 660 wifi wifi
@@ -128,3 +138,4 @@ service google /system/bin/google
     user root
     group root
     oneshot
+

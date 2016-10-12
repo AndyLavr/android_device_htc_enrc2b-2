@@ -4,6 +4,11 @@
 ro.opengles.version = 131072
 #
 
+# For full debug GL (if enable cannot start bootanimation)
+# debug.egl.callstack=1
+# debug.egl.profiler=1
+# debug.perfhudes=1
+
 #Common display settings
 ro.sf.lcd_density=320
 ro.hwui.text_cache_width=2048
@@ -73,7 +78,10 @@ ro.ril.stkprof.param=FFFFFFFF7F1D00DFB703021F22000000830000000000401000000000000
 
 # Disable LTE
 telephony.lteOnGsmDevice=0
-ro.telephony.default_network=0
+# ro.telephony.default_network=0
+ro.telephony.default_network=3
+ro.telephony.ril.config=simactivation
+ro.ril.def.preferred.network=3
 
 # Support HW reset dialog
 ro.product.hwreset = 1
@@ -91,3 +99,7 @@ persist.demo.hdmirotation=landscape
 
 #fw.power_user_switcher=true
 service.htc_ebdlogd.enable=1
+
+# Camera
+# camera2.portability.force_api=1
+

@@ -134,11 +134,16 @@ lib/libril-icera.so
 lib/libril.so
 lib/libscalado.so
 lib/libsensors_mpl.so
+lib/libshim_crypto.so
 lib/libsystem_server.so
 lib/tf_crypto_sst.so
 vendor/etc/audio_effects.conf
 vendor/firmware/libpn544_fw.so
 vendor/firmware/mfg.bin
+vendor/lib/libwvdrm_L1.so
+vendor/lib/libwvm.so
+vendor/lib/libWVStreamControlAPI_L1.so
+vendor/lib/drm/libdrmwvmplugin.so
 etc/soundimage/board_version.txt
 etc/soundimage/CodecDSPID.txt
 etc/soundimage/CodecDSPID_XA.txt

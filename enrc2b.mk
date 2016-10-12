@@ -70,13 +70,32 @@ PRODUCT_PACKAGES += \
     libnfc \
     Tag
 
-# ViperFX packages
+# CM Snap camera
 PRODUCT_PACKAGES += \
-    viperfx
+    Snap
 
-#Help GL work in M
+# Extra tools in CM
 PRODUCT_PACKAGES += \
-    libdgv1
+    bash \
+    bzip2 \
+    curl \
+    unrar \
+    unzip \
+    zip
+
+# Help GL, ril and camera work in M (SSL compat)
+PRODUCT_PACKAGES += \
+    libboringssl-compat
+
+# Libstlport needed by lib/libnvcap.so
+PRODUCT_PACKAGES += \
+    libstlport
+
+# Shims
+PRODUCT_PACKAGES += \
+    libmmcompat \
+    libshim_camera \
+    libshim_skia
 
 # Power
 PRODUCT_PACKAGES += \
